@@ -5,26 +5,26 @@ interface PageParams {
 }
 
 // Constants for easy updates
-const WEB_URL = "https://uniarchive.vercel.app"; // Replace with your actual URL
-const IMAGE_URL = `${WEB_URL}/assets/og-banner.png`; // Replace with your actual image path
+const WEB_URL = "https://neonswitch.vercel.app"; // Your NeonSwitch URL
+const IMAGE_URL = `${WEB_URL}/assets/og-banner.png`; // OpenGraph banner image
 const DESCRIPTION =
-  "UniArchive: Your centralized hub for accessing, sharing, and archiving university past questions, lecture notes, handouts, and academic resources.";
+  "NeonSwitch: Your one-stop platform for Virtual Numbers, VTU services, API access, and more, all in a sleek dark neon interface.";
 
 export const baseMetadata: Metadata = {
-  title: "UniArchive - Your Academic Resource Hub",
+  title: "NeonSwitch - Virtual Numbers & VTU Services",
   description: DESCRIPTION,
 
   openGraph: {
-    title: "UniArchive - Your Academic Resource Hub",
+    title: "NeonSwitch - Virtual Numbers & VTU Services",
     description: DESCRIPTION,
     url: WEB_URL,
-    siteName: "UniArchive",
+    siteName: "NeonSwitch",
     images: [
       {
         url: IMAGE_URL,
         width: 1200,
         height: 630,
-        alt: "UniArchive OpenGraph Image",
+        alt: "NeonSwitch OpenGraph Image",
       },
     ],
     locale: "en_US",
@@ -33,30 +33,28 @@ export const baseMetadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "UniArchive - Your Academic Resource Hub",
+    title: "NeonSwitch - Virtual Numbers & VTU Services",
     description: DESCRIPTION,
     images: [IMAGE_URL],
-    site: "@uniarchive",
-    creator: "@uniarchive",
+    site: "@neonswitch",
+    creator: "@neonswitch",
   },
 
   keywords: [
-    "UniArchive",
-    "Past Questions",
-    "Lecture Notes",
-    "Academic Resources",
-    "University Materials",
-    "Student Resources",
-    "Study Hub",
-    "UNIZIK",
-    "Online Archive",
-    "Handouts",
-    "Educational Notes",
-    "Course Materials",
-    "Academic Archive",
-    "University Exams",
-    "Free PDF Downloads",
-    "Student Learning Platform",
+    "NeonSwitch",
+    "Virtual Numbers",
+    "VTU Services",
+    "Airtime Recharge",
+    "Data Top-Up",
+    "API Services",
+    "Dark Neon UI",
+    "Dashboard",
+    "Online Recharge",
+    "Business Tools",
+    "Telecom Services",
+    "Digital Platform",
+    "Student Tools",
+    "Developer API",
   ],
 
   robots: {
@@ -86,79 +84,94 @@ export const baseMetadata: Metadata = {
 
 export function generateMetadata({ params }: { params: PageParams }): Metadata {
   const pageSpecificMetadata: Record<string, Partial<Metadata>> = {
-    resources: {
-      title: "Resources | UniArchive",
+    dashboard: {
+      title: "Dashboard | NeonSwitch",
       description:
-        "Browse a vast archive of university past questions, lecture notes, and academic materials by course or department.",
+        "Access your virtual numbers, VTU services, and manage your account from the NeonSwitch dashboard.",
       openGraph: {
-        title: "Resources | UniArchive",
+        title: "Dashboard | NeonSwitch",
         description:
-          "Browse a vast archive of university past questions, lecture notes, and academic materials by course or department.",
+          "Access your virtual numbers, VTU services, and manage your account from the NeonSwitch dashboard.",
       },
       twitter: {
-        title: "Resources | UniArchive",
+        title: "Dashboard | NeonSwitch",
         description:
-          "Browse a vast archive of university past questions, lecture notes, and academic materials by course or department.",
+          "Access your virtual numbers, VTU services, and manage your account from the NeonSwitch dashboard.",
       },
     },
-    departments: {
-      title: "Departments | UniArchive",
+    virtualnumber: {
+      title: "Virtual Numbers | NeonSwitch",
       description:
-        "Find resources organized by departments and faculties from universities across Nigeria and beyond.",
+        "Generate and manage virtual numbers quickly and securely using NeonSwitch.",
       openGraph: {
-        title: "Departments | UniArchive",
+        title: "Virtual Numbers | NeonSwitch",
         description:
-          "Find resources organized by departments and faculties from universities across Nigeria and beyond.",
+          "Generate and manage virtual numbers quickly and securely using NeonSwitch.",
       },
       twitter: {
-        title: "Departments | UniArchive",
+        title: "Virtual Numbers | NeonSwitch",
         description:
-          "Find resources organized by departments and faculties from universities across Nigeria and beyond.",
+          "Generate and manage virtual numbers quickly and securely using NeonSwitch.",
       },
     },
-    about: {
-      title: "About Us | UniArchive",
+    vtu: {
+      title: "VTU Services | NeonSwitch",
       description:
-        "Learn about UniArchive's mission to make academic resources accessible for students everywhere.",
+        "Top up airtime or data for yourself or others with NeonSwitch VTU services.",
       openGraph: {
-        title: "About Us | UniArchive",
+        title: "VTU Services | NeonSwitch",
         description:
-          "Learn about UniArchive's mission to make academic resources accessible for students everywhere.",
+          "Top up airtime or data for yourself or others with NeonSwitch VTU services.",
       },
       twitter: {
-        title: "About Us | UniArchive",
+        title: "VTU Services | NeonSwitch",
         description:
-          "Learn about UniArchive's mission to make academic resources accessible for students everywhere.",
+          "Top up airtime or data for yourself or others with NeonSwitch VTU services.",
       },
     },
-    faq: {
-      title: "FAQs | UniArchive",
+    pricing: {
+      title: "Pricing | NeonSwitch",
       description:
-        "Find answers to common questions about using UniArchive and contributing academic materials.",
+        "Check service rates and packages for virtual numbers and VTU top-ups on NeonSwitch.",
       openGraph: {
-        title: "FAQs | UniArchive",
+        title: "Pricing | NeonSwitch",
         description:
-          "Find answers to common questions about using UniArchive and contributing academic materials.",
+          "Check service rates and packages for virtual numbers and VTU top-ups on NeonSwitch.",
       },
       twitter: {
-        title: "FAQs | UniArchive",
+        title: "Pricing | NeonSwitch",
         description:
-          "Find answers to common questions about using UniArchive and contributing academic materials.",
+          "Check service rates and packages for virtual numbers and VTU top-ups on NeonSwitch.",
+      },
+    },
+    api: {
+      title: "API Docs | NeonSwitch",
+      description:
+        "Access the NeonSwitch API documentation for integrating virtual numbers and VTU services.",
+      openGraph: {
+        title: "API Docs | NeonSwitch",
+        description:
+          "Access the NeonSwitch API documentation for integrating virtual numbers and VTU services.",
+      },
+      twitter: {
+        title: "API Docs | NeonSwitch",
+        description:
+          "Access the NeonSwitch API documentation for integrating virtual numbers and VTU services.",
       },
     },
     auth: {
-      title: "Auth | UniArchive",
+      title: "Auth | NeonSwitch",
       description:
-        "Join us today to find answers to common questions about using UniArchive and contributing academic materials.",
+        "Login or register to access NeonSwitch services like virtual numbers, VTU, and more.",
       openGraph: {
-        title: "Auth | UniArchive",
+        title: "Auth | NeonSwitch",
         description:
-          "Join us today to find answers to common questions about using UniArchive and contributing academic materials.",
+          "Login or register to access NeonSwitch services like virtual numbers, VTU, and more.",
       },
       twitter: {
-        title: "Auth | UniArchive",
+        title: "Auth | NeonSwitch",
         description:
-          "Join us today to find answers to common questions about using UniArchive and contributing academic materials.",
+          "Login or register to access NeonSwitch services like virtual numbers, VTU, and more.",
       },
     },
   };
