@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-neon-green: #39ff14;
+  --color-neon-cyan: #00fff7;
+  --color-neon-pink: #ff00ff;
+
+  /* Custom Shadows */
+  --shadow-neon-green: 0 0 10px #39ff14, 0 0 20px #39ff14;
+  --shadow-neon-pink-glow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+  --color-neonGreen: #39ff14;
+  --color-neonCyan: #00fff7;
+  --color-neonPink: #ff00ff;
+  
+  --shadow-neonGreen: 0 0 10px #39ff14, 0 0 20px #39ff14;
+  --shadow-neonPinkGlow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-sora: var(--font-sora)
+}
+
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+button{
+  cursor: pointer;
+}
