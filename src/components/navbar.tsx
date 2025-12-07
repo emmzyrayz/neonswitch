@@ -4,20 +4,54 @@ import clsx from "clsx";
 import Link from "next/link";
 import { useState } from "react";
 
+interface NavLinkProps {
+  name: string;
+  path: string;
+}
+
+const NavLinks: NavLinkProps[] = [
+  {
+    name: "Home",
+    path: "",
+  },
+  {
+    name: "Services",
+    path: "services",
+  },
+  {
+    name: "Pricing",
+    path: "pricing",
+  },
+  {
+    name: "Api Docs",
+    path: "api",
+  },
+  {
+    name: "Contact",
+    path: "contact",
+  },
+];
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
     <nav
       className={clsx(
-        "w-full",
-        "bg-[#0A0A0C]/80",
+        "w-[95%]",
+        "bg-muted/20",
+        "rounded-[12px]",
+        "mt-3",
+        "lg:mt-0",
         "backdrop-blur-md",
         "border-b",
-        "border-white/10",
+        "border-primary/10",
         "fixed",
         "top-0",
-        "z-50"
+        "z-50",
+        "duration-700",
+        "ease-in-out",
+        "transition-height"
       )}
     >
       <div
@@ -32,58 +66,61 @@ export default function Navbar() {
         )}
       >
         {/* LOGO */}
-        <h1
+        <Link
+          href="/"
           className={clsx(
             "text-2xl",
             "font-bold",
-            "text-cyan-400",
-            "drop-shadow-[0_0_10px_rgba(34,211,238,0.45)]"
+            "text-white",
+            "font-sora",
+            "drop-shadow-[0_0_10px_#E5E7EB]"
           )}
         >
           NeonSwitch
-        </h1>
+        </Link>
 
         {/* Desktop Links */}
         <div className={clsx("hidden", "md:flex", "gap-8")}>
-          {["Home", "Services", "Pricing", "API Docs", "Contact"].map(
-            (item) => (
-              <a
-                key={item}
-                className={clsx(
-                  "text-gray-300",
-                  "hover:text-cyan-400",
-                  "transition",
-                  "font-medium"
-                )}
-              >
-                {item}
-              </a>
-            )
-          )}
+          {NavLinks.map((item) => (
+            <Link
+              key={item.name}
+              href={`/${item.path}`}
+              className={clsx(
+                "text-primary/30",
+                "hover:text-primary/40",
+                "transition",
+                "font-medium",
+                "cursor-pointer"
+              )}
+            >
+              {item.name}
+            </Link>
+          ))}
         </div>
 
         {/* CTA */}
-        <button
+        <Link
+          href="/signin"
           className={clsx(
             "hidden",
             "md:block",
             "px-6",
             "py-2",
-            "bg-cyan-400",
+            "bg-primary/40",
             "text-black",
             "font-semibold",
             "rounded-lg",
-            "shadow-[0_0_15px_rgba(34,211,238,0.6)]",
-            "hover:bg-cyan-300",
+            "shadow-[0_0_15px_#E5E7EB]",
+            "hover:bg-primary/30",
             "transition"
           )}
         >
           Start Demo
-        </button>
+        </Link>
 
         {/* Hamburger */}
         <button
-          className={clsx("md:hidden", "text-white", "text-2xl")}
+          className={clsx("md:hidden", "text-muted", "text-2xl")}
           onClick={() => setOpen(!open)}
         >
           ☰
@@ -99,27 +136,40 @@ export default function Navbar() {
             "pb-4",
             "flex",
             "flex-col",
-            "gap-4",
-            "text-gray-300"
+            "gap-4"
           )}
         >
-          <Link href="/">Home </Link>
-          <Link href="/">Services </Link>
-          <Link href="/pricing">Pricing </Link>
-          <Link href="/">API Docs </Link>
-          <Link href="/">Contact </Link>
-          <button
+          {NavLinks.map((item) => (
+            <Link
+              key={item.name}
+              href={`/${item.path}`}
+              className={clsx(
+                "text-muted",
+                "hover:text-soft/40",
+                "transition",
+                "font-medium",
+                "cursor-pointer"
+              )}
+            >
+              {item.name}
+            </Link>
+          ))}
+          <Link
+            href="/signin"
             className={clsx(
               "px-6",
               "py-2",
-              "bg-cyan-400",
-              "text-black",
+              "bg-primary/40",
+              "hover:text-soft/40",
+              "text-soft",
               "rounded-lg",
-              "shadow-[0_0_15px_rgba(34,211,238,0.5)]"
+              "shadow-[0_0_15px_#E5E7EB]",
+              "text-center",
+              "font-semibold"
             )}
           >
             Start Demo
-          </button>
+          </Link>
         </div>
       )}
     </nav>

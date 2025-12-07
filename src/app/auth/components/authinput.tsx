@@ -14,7 +14,7 @@ const AuthInput: React.FC<AuthInputProps> = ({
 }) => {
   return (
     <div className={clsx('flex', 'flex-col', 'mb-4')}>
-      <label className={clsx('text-neonGreen', 'mb-1', 'font-mono')}>{label}</label>
+      <label className={clsx('text-muted', 'mb-1', 'font-mono')}>{label}</label>
       <input
         type={type}
         placeholder={placeholder}

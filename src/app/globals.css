@@ -11,6 +11,11 @@
   --color-neon-green: #39ff14;
   --color-neon-cyan: #00fff7;
   --color-neon-pink: #ff00ff;
+  --color-primary: #000000;
+  --color-secondary: #111111;
+  --color-muted: #6B7280;
+  --color-border: #E5E7EB;
+  --color-soft: #F9FAFB;
 
   /* Custom Shadows */
   --shadow-neon-green: 0 0 10px #39ff14, 0 0 20px #39ff14;
@@ -40,6 +45,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   width: 100vw;
   overflow-x: hidden;
+  scrollbar-width: 0;
 }
 
 button{

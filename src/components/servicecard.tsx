@@ -4,28 +4,28 @@ const services = [
   {
     title: "Virtual Numbers",
     desc: "Instant second numbers for verification or business.",
-    glow: "shadow-[0_0_30px_rgba(34,211,238,0.4)]",
-    color: "border-cyan-400",
+    glow: "shadow-[0_0_30px_rgba(0,0,0,0.4)]",
+    color: "border-muted",
   },
   {
     title: "VTU Services",
     desc: "Airtime, data, and electricity tokens delivered fast.",
-    glow: "shadow-[0_0_30px_rgba(244,114,182,0.4)]",
-    color: "border-fuchsia-400",
+    glow: "shadow-[0_0_30px_rgba(255,255,255,0.4)]",
+    color: "border-soft/30",
   },
   {
     title: "TikTok Coins (Soon)",
     desc: "Auto-delivery TikTok boosting & coin purchases.",
-    glow: "shadow-[0_0_30px_rgba(168,85,247,0.4)]",
-    color: "border-purple-400",
+    glow: "shadow-[0_0_30px_rgba(111,111,111,0.4)]",
+    color: "border-white/40",
   },
 ];
 
 export default function ServiceCards() {
   return (
-    <section className={clsx('py-20', 'bg-[#0A0A0C]', 'text-white', 'w-full')}>
+    <section className={clsx('py-20', 'bg-black', 'text-soft', 'rounded-lg', 'my-3', 'w-[95%]', 'font-sora')}>
       <div className={clsx('max-w-6xl', 'mx-auto', 'px-6', 'text-center')}>
-        <h2 className={clsx('text-4xl', 'font-bold', 'mb-12')}>Our Services</h2>
+        <h2 className={clsx('md:text-4xl', 'text-3xl', 'font-bold', 'mb-12')}>Our Services</h2>
 
         <div className={clsx('grid', 'md:grid-cols-3', 'gap-8')}>
           {services.map((s, i) => (

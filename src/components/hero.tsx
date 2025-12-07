@@ -11,7 +11,7 @@ export const Hero = () => {
         "flex",
         "items-center",
         "justify-center",
-        "bg-[#0A0A0C]",
+        "bg-soft",
         "overflow-hidden"
       )}
     >
@@ -23,7 +23,7 @@ export const Hero = () => {
           "left-0",
           "w-[500px]",
           "h-[500px]",
-          "bg-cyan-500/20",
+          "bg-primary/20",
           "blur-3xl",
           "rounded-full"
         )}
@@ -35,7 +35,7 @@ export const Hero = () => {
           "right-0",
           "w-[500px]",
           "h-[500px]",
-          "bg-fuchsia-500/20",
+          "bg-secondary/20",
           "blur-3xl",
           "rounded-full"
         )}
@@ -60,7 +60,7 @@ export const Hero = () => {
           "text-center",
           "px-6",
           "max-w-3xl",
-          'gap-4'
+          "gap-4"
         )}
       >
         {/* Title */}
@@ -69,10 +69,11 @@ export const Hero = () => {
             "text-4xl",
             "md:text-6xl",
             "font-bold",
-            "text-white",
+            "text-primary",
             "leading-tight",
             "mb-4",
-            "drop-shadow-[0_0_15px_rgba(0,255,255,0.35)]"
+            "drop-shadow-[0_0_15px_#E5E7EB]",
+            "font-sora"
           )}
         >
           Instant Virtual Numbers & High-Speed VTU Solutions
@@ -81,7 +82,7 @@ export const Hero = () => {
         {/* Subtitle */}
         <p
           className={clsx(
-            "text-gray-300",
+            "text-primary/50",
             "text-[14px]",
             "md:text-lg",
             "sm:text-[12px]",
@@ -103,11 +104,11 @@ export const Hero = () => {
               "py-3",
               "font-semibold",
               "text-black",
-              "bg-cyan-400",
-              "hover:bg-cyan-300",
+              "bg-white",
+              "hover:bg-muted",
               "transition",
               "rounded-lg",
-              "shadow-[0_0_20px_rgba(34,211,238,0.5)]"
+              "shadow-[0_0_20px_#E5E7EB]"
             )}
           >
             Start Demo
@@ -120,11 +121,11 @@ export const Hero = () => {
               "font-semibold",
               "text-white",
               "border",
-              "border-fuchsia-400",
+              "border-secondary/30",
               "rounded-lg",
-              "hover:bg-fuchsia-500/10",
+              "hover:bg-secondary/10",
               "transition",
-              "shadow-[0_0_15px_rgba(244,114,182,0.4)]"
+              "shadow-[0_0_15px_#111111]"
             )}
           >
             Explore Services
