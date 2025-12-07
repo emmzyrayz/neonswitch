@@ -18,7 +18,7 @@ const AuthInput: React.FC<AuthInputProps> = ({
       <input
         type={type}
         placeholder={placeholder}
-        className={clsx('px-4', 'py-2', 'rounded-md', 'bg-[#1a1a1a]', 'border', 'border-neonGreen', 'focus:border-neonCyan', 'focus:ring-2', 'focus:ring-neonGreen', 'text-white', 'outline-none', 'transition-all', 'duration-300')}
+        className={clsx('px-4', 'py-2', 'rounded-md', 'bg-[#1a1a1a]', 'border', 'border-soft', 'focus:border-muted', 'focus:ring-2', 'focus:ring-soft', 'text-white', 'outline-none', 'transition-all', 'duration-300')}
       />
     </div>
   );

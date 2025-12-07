@@ -23,7 +23,7 @@ export default function Verify() {
           <h2
             className={clsx(
               "text-3xl",
-              "text-neonCyan",
+              "text-muted",
               "font-bold",
               "mb-6",
               "font-mono"

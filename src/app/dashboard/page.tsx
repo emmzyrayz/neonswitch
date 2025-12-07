@@ -16,7 +16,7 @@ export default function Dashboard() {
               title="Virtual Number"
               description="Generate virtual numbers for testing or business use"
             >
-              <button className={clsx('px-4', 'py-2', 'mt-2', 'bg-neonPink', 'rounded-md', 'shadow-neonPinkGlow', 'hover:shadow-neonPinkGlow', 'transition-all')}>
+              <button className={clsx('px-4', 'py-2', 'mt-2', 'bg-muted', 'rounded-md', 'shadow-muted/20', 'hover:shadow-muted/30', 'transition-all')}>
                 Go
               </button>
             </DashboardCard>
@@ -25,13 +25,13 @@ export default function Dashboard() {
               title="VTU Services"
               description="Recharge airtime or data for yourself or others"
             >
-              <button className={clsx('px-4', 'py-2', 'mt-2', 'bg-neonCyan', 'rounded-md', 'shadow-neonCyan', 'hover:shadow-neonCyan', 'transition-all')}>
+              <button className={clsx('px-4', 'py-2', 'mt-2', 'bg-muted', 'rounded-md', 'shadow-muted', 'hover:shadow-muted', 'transition-all')}>
                 Go
               </button>
             </DashboardCard>
 
             <DashboardCard title="Pricing" description="View service pricing">
-              <button className={clsx('px-4', 'py-2', 'mt-2', 'bg-neonGreen', 'rounded-md', 'shadow-neonGreen', 'hover:shadow-neonGreen', 'transition-all')}>
+              <button className={clsx('px-4', 'py-2', 'mt-2', 'bg-muted', 'rounded-md', 'shadow-muted', 'hover:shadow-muted', 'transition-all')}>
                 View
               </button>
             </DashboardCard>
@@ -40,7 +40,7 @@ export default function Dashboard() {
               title="API Docs"
               description="Access the platform API documentation"
             >
-              <button className={clsx('px-4', 'py-2', 'mt-2', 'bg-neonPink', 'rounded-md', 'shadow-neonPinkGlow', 'hover:shadow-neonPinkGlow', 'transition-all')}>
+              <button className={clsx('px-4', 'py-2', 'mt-2', 'bg-muted', 'rounded-md', 'shadow-muted', 'hover:shadow-muted', 'transition-all')}>
                 Open
               </button>
             </DashboardCard>
@@ -49,7 +49,7 @@ export default function Dashboard() {
               title="Admin Panel"
               description="Manage users, services, and settings"
             >
-              <button className={clsx('px-4', 'py-2', 'mt-2', 'bg-neonCyan', 'rounded-md', 'shadow-neonCyan', 'hover:shadow-neonCyan', 'transition-all')}>
+              <button className={clsx('px-4', 'py-2', 'mt-2', 'bg-muted', 'rounded-md', 'shadow-muted', 'hover:shadow-muted', 'transition-all')}>
                 Enter
               </button>
             </DashboardCard>

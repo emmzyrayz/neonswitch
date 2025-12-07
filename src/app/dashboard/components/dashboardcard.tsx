@@ -12,8 +12,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   children,
 }) => {
   return (
-    <div className={clsx('bg-[#1a1a1a]', 'p-6', 'rounded-xl', 'shadow-neonGreen', 'hover:shadow-neonCyan', 'transition-all', 'duration-300')}>
-      <h3 className={clsx('text-neonGreen', 'font-bold', 'text-lg', 'mb-2')}>{title}</h3>
+    <div className={clsx('bg-[#1a1a1a]', 'p-6', 'rounded-xl', 'shadow-muted', 'hover:shadow-muted', 'transition-all', 'duration-300')}>
+      <h3 className={clsx('text-soft', 'font-bold', 'text-lg', 'mb-2')}>{title}</h3>
       <p className={clsx('text-white', 'text-sm', 'mb-4')}>{description}</p>
       {children}
     </div>

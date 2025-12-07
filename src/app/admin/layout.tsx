@@ -13,12 +13,33 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className={clsx('min-h-screen', 'bg-[#050507]', 'text-white', 'flex')}>
+    <main
+      className={clsx(
+        "min-h-screen",
+        "bg-[#050507]",
+        "text-white",
+        "flex",
+        "relative"
+      )}
+    >
       {/* Sidebar */}
       <AdminSidebar />
 
       {/* Main content */}
-      <div className={clsx('flex-1', 'p-10', 'overflow-y-auto')}>{children}</div>
+      <div
+        className={clsx(
+          "flex-1",
+          "p-4",
+          "md:p-6",
+          "lg:p-10",
+          "overflow-y-auto",
+          "pt-20", // Extra top padding on mobile for menu button
+          "md:pt-6",
+          "lg:pt-10"
+        )}
+      >
+        {children}
+      </div>
     </main>
   );
 }

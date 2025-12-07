@@ -14,7 +14,7 @@ const NeonButton: React.FC<NeonButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className={`bg-neonPink text-black px-6 py-2 rounded-md font-bold tracking-wide shadow-neonPink hover:shadow-neonPinkGlow transition-all duration-300 ${className}`}
+      className={`bg-primary text-soft px-6 py-2 rounded-md font-bold tracking-wide shadow-soft/30 hover:shadow-neonPinkGlow transition-all duration-300 ${className}`}
     >
       {children}
     </button>

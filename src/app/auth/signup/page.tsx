@@ -52,7 +52,7 @@ export default function Register() {
             Already have an account?{" "}
             <Link
               href="/auth/login"
-              className={clsx("text-neonGreen", "underline")}
+              className={clsx("text-muted", "underline")}
             >
               Login
             </Link>

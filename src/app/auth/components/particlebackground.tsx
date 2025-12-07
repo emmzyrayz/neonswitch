@@ -22,10 +22,10 @@ const ParticleBackground = () => {
     const particles = Array.from({ length: 80 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      r: Math.random() * 2 + 1, // Bigger particles (2-5px)
+      r: Math.random() * 2 + 2, // Bigger particles (2-5px)
       dx: (Math.random() - 0.5) * 0.5,
       dy: (Math.random() - 0.5) * 0.5,
-      color: Math.random() > 0.5 ? "#39ff14" : "#00ffff", // Mix of neon green and cyan
+      color: Math.random() > 0.5 ? "#6B7280" : "#E5E7EB", // Mix of neon green and cyan
     }));
 
     let animationFrameId: number;

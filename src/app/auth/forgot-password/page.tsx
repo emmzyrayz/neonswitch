@@ -23,7 +23,7 @@ export default function ForgotPassword() {
           <h2
             className={clsx(
               "text-3xl",
-              "text-neonGreen",
+              "text-muted",
               "font-bold",
               "mb-6",
               "font-mono"

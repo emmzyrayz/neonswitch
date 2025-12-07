@@ -24,13 +24,13 @@ export default function Login() {
           <h2
             className={clsx(
               "text-3xl",
-              "text-neonGreen",
+              "text-soft",
               "font-bold",
               "mb-6",
-              "font-mono"
+              "font-sora"
             )}
           >
-            Login
+            SignIn
           </h2>
           <form className={clsx("flex", "flex-col")}>
             <AuthInput
@@ -42,13 +42,13 @@ export default function Login() {
               type="password"
               placeholder="Enter your password"
             />
-            <NeonButton className="mt-4">Login</NeonButton>
+            <NeonButton className="mt-4">SignIn</NeonButton>
           </form>
           <p className={clsx("text-white", "mt-4", "text-sm")}>
             Forgot password?{" "}
             <Link
               href="/auth/forgot-password"
-              className={clsx("text-neonCyan", "underline")}
+              className={clsx("text-muted", "underline")}
             >
               Click here
             </Link>
@@ -57,7 +57,7 @@ export default function Login() {
             Don&apos;t have an account?{" "}
             <Link
               href="/auth/register"
-              className={clsx("text-neonPink", "underline")}
+              className={clsx("text-muted", "underline")}
             >
               Register
             </Link>

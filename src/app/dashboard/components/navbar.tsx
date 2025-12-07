@@ -2,10 +2,10 @@ import clsx from "clsx";
 
 const Navbar = () => {
   return (
-    <header className={clsx('w-full', 'bg-[#0f0f0f]', 'p-4', 'flex', 'justify-between', 'items-center', 'shadow-neonCyan')}>
-      <h2 className={clsx('text-xl', 'font-bold', 'text-neonGreen')}>Dashboard</h2>
+    <header className={clsx('w-full', 'bg-[#0f0f0f]', 'p-4', 'flex', 'justify-between', 'items-center', 'shadow-muted')}>
+      <h2 className={clsx('text-xl', 'font-bold', 'text-soft')}>Dashboard</h2>
       <div className={clsx('flex', 'items-center', 'gap-4')}>
-        <button className={clsx('px-4', 'py-2', 'bg-neonPink', 'rounded-md', 'shadow-neonPinkGlow', 'hover:shadow-neonPinkGlow', 'transition-all')}>
+        <button className={clsx('px-4', 'py-2', 'bg-muted', 'rounded-md', 'shadow-muted', 'hover:shadow-muted', 'transition-all')}>
           Logout
         </button>
       </div>
