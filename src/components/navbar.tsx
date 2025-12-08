@@ -24,7 +24,7 @@ const NavLinks: NavLinkProps[] = [
   },
   {
     name: "Api Docs",
-    path: "api",
+    path: "docs",
   },
   {
     name: "Contact",
@@ -120,7 +120,7 @@ export default function Navbar() {
 
         {/* Hamburger */}
         <button
-          className={clsx("md:hidden", "text-muted", "text-2xl")}
+          className={clsx("md:hidden", "text-soft", "text-2xl")}
           onClick={() => setOpen(!open)}
         >
           ☰
@@ -144,8 +144,8 @@ export default function Navbar() {
               key={item.name}
               href={`/${item.path}`}
               className={clsx(
-                "text-muted",
-                "hover:text-soft/40",
+                "text-soft/50",
+                "hover:text-soft",
                 "transition",
                 "font-medium",
                 "cursor-pointer"

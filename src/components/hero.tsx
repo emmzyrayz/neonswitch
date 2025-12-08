@@ -11,7 +11,7 @@ export const Hero = () => {
         "flex",
         "items-center",
         "justify-center",
-        "bg-soft",
+        "bg-primary/60",
         "overflow-hidden"
       )}
     >
@@ -23,7 +23,7 @@ export const Hero = () => {
           "left-0",
           "w-[500px]",
           "h-[500px]",
-          "bg-primary/20",
+          "bg-soft/20",
           "blur-3xl",
           "rounded-full"
         )}
@@ -35,7 +35,7 @@ export const Hero = () => {
           "right-0",
           "w-[500px]",
           "h-[500px]",
-          "bg-secondary/20",
+          "bg-muted/20",
           "blur-3xl",
           "rounded-full"
         )}
@@ -43,10 +43,10 @@ export const Hero = () => {
 
       {/* Subtle grid background */}
       <div
-        className={clsx("absolute", "inset-0", "opacity-10")}
+        className={clsx("absolute", "inset-0", "bg-transparent")}
         style={{
           backgroundImage:
-            "url('https://www.transparenttextures.com/patterns/cubes.png')",
+            "url('https://www.transparenttextures.com/patterns/gplay.png')",
         }}
       ></div>
 

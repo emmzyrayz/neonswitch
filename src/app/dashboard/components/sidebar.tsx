@@ -27,12 +27,12 @@ const Sidebar = () => {
         onClick={toggleSidebar}
         className={clsx(
           "fixed",
-          "top-4",
+          "top-14",
           "left-4",
           "z-50",
           "lg:hidden",
           "p-3",
-          "bg-secondary",
+          "bg-secondary/30",
           "hover:bg-secondary/80",
           "border",
           "border-muted/30",
@@ -106,10 +106,13 @@ const Sidebar = () => {
                   "py-2",
                   "rounded-md",
                   "font-mono",
-                  "hover:bg-secondary",
+                  "hover:bg-soft/30",
                   "transition-all",
                   "duration-200",
                   "cursor-pointer",
+                  "transition-all",
+                  "duration-500",
+                  "ease-in-out",
                   active === item.name && "bg-secondary border-l-4 border-muted"
                 )}
               >

@@ -1,7 +1,10 @@
+'use client'
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { baseMetadata } from "@/utils/metadata";
+import LoadingScreen from "@/components/loading";
+import { useEffect, useState } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,6 +44,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [showContent, setShowContent] = useState(false);
+
+  useEffect(() => {
+    // Show loading screen for 3 seconds on initial mount
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      setShowContent(true);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <html
       lang="en"
@@ -55,7 +71,14 @@ export default function RootLayout({
         <title>{metadata.title as string}</title>
         <meta name="description" content={metadata.description as string} />
       </head>
-      <body>{children}</body>
+      <body>
+        {" "}
+        <LoadingScreen
+          isLoading={isLoading}
+          onLoadingComplete={() => setShowContent(true)}
+        />
+        {showContent && children}
+      </body>
     </html>
   );
 }

@@ -19,6 +19,12 @@ const services = [
     glow: "shadow-[0_0_30px_rgba(111,111,111,0.4)]",
     color: "border-white/40",
   },
+  {
+    title: "Account Logins (Soon)",
+    desc: "Facebooks, Tiktok, Telegram, IG accounts, both UK and Verified account purchases.",
+    glow: "shadow-[0_0_30px_rgba(111,111,111,0.4)]",
+    color: "border-white/70",
+  },
 ];
 
 export default function ServiceCards() {

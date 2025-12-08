@@ -110,7 +110,7 @@ export default function Footer() {
           "mx-auto",
           "px-6",
           "grid",
-          "md:grid-cols-4",
+          "md:grid-cols-2",
           "gap-12"
         )}
       >
@@ -135,50 +135,85 @@ export default function Footer() {
         {/* Links */}
 
         {/* Dynamic Footer List */}
-        {FooterLists.map((section, index) => (
-          <div key={index}>
-            <h3 className={clsx('text-lg', 'font-semibold', 'mb-4', 'text-black')}>
-              {section.head}
-            </h3>
-            <ul className={clsx('space-y-2', 'text-sm')}>
-              {section.items.map((item, itemIndex) => {
-                const Icon = item.icon;
-                const isExternalLink = item.path.startsWith("http");
-                const isSocialLink = section.head === "Connect";
+        <div className={clsx('flex', 'flex-wrap', 'gap-5', 'w-full', 'items-center', 'justify-center')}>
+          {FooterLists.map((section, index) => (
+            <div key={index} className="min-w-[30%]">
+              <h3
+                className={clsx(
+                  "text-lg",
+                  "font-semibold",
+                  "mb-4",
+                  "text-black"
+                )}
+              >
+                {section.head}
+              </h3>
+              <ul className={clsx("space-y-2", "text-[14px]", "md:text-[16px]")}>
+                {section.items.map((item, itemIndex) => {
+                  const Icon = item.icon;
+                  const isExternalLink = item.path.startsWith("http");
+                  const isSocialLink = section.head === "Connect";
 
-                return(
-                  <li key={itemIndex} className={clsx('hover:text-black', 'font-bold', 'transition', 'cursor-pointer')}>
-                    <Link href={isExternalLink ? item.path : `/${item.path}`} target={isExternalLink ? "_blank" : "_self"} rel={isExternalLink ? "noopener noreferrer" : undefined} className={clsx('flex', 'items-center', 'gap-2')}>
-                      {/* Social Link With responsive icon/name display */}
-                      {isSocialLink && Icon ? (
-                        <>
-                          {/* Desktop: Icon + Name */}
-                          <span className={clsx('hidden', 'lg:flex', 'items-center', 'gap-2')}>
-                            <Icon className="text-lg" />
-                            {item.name}
-                          </span>
-
-                          {/* Tablet: Name only */}
-                          <span className={clsx('hidden', 'md:inline', 'lg:hidden')}>
-                            {item.name}
-                          </span>
-
-                          {/* Mobile: Icon Only */}
-                          <span className="md:hidden">
-                            <Icon className="text-xl" />
-                          </span>
-                        </>
-                      ) : (
-                        // Regular Links: just show name
-                        item.name
+                  return (
+                    <li
+                      key={itemIndex}
+                      className={clsx(
+                        "hover:text-black",
+                        "font-bold",
+                        "transition",
+                        "cursor-pointer"
                       )}
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        ))}
+                    >
+                      <Link
+                        href={isExternalLink ? item.path : `/${item.path}`}
+                        target={isExternalLink ? "_blank" : "_self"}
+                        rel={isExternalLink ? "noopener noreferrer" : undefined}
+                        className={clsx("flex", "items-center", "gap-2")}
+                      >
+                        {/* Social Link With responsive icon/name display */}
+                        {isSocialLink && Icon ? (
+                          <>
+                            {/* Desktop: Icon + Name */}
+                            <span
+                              className={clsx(
+                                "hidden",
+                                "lg:flex",
+                                "items-center",
+                                "gap-2"
+                              )}
+                            >
+                              <Icon className="text-lg" />
+                              {item.name}
+                            </span>
+
+                            {/* Tablet: Name only */}
+                            <span
+                              className={clsx(
+                                "hidden",
+                                "md:inline",
+                                "lg:hidden"
+                              )}
+                            >
+                              {item.name}
+                            </span>
+
+                            {/* Mobile: Icon Only */}
+                            <span className="md:hidden">
+                              <Icon className="text-xl" />
+                            </span>
+                          </>
+                        ) : (
+                          // Regular Links: just show name
+                          item.name
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Bottom */}
