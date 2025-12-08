@@ -1,5 +1,6 @@
 // app/components/Hero.tsx
 import clsx from "clsx";
+import Link from "next/link";
 
 export const Hero = () => {
   return (
@@ -82,7 +83,7 @@ export const Hero = () => {
         {/* Subtitle */}
         <p
           className={clsx(
-            "text-primary/50",
+            "text-primary/70",
             "text-[14px]",
             "md:text-lg",
             "sm:text-[12px]",
@@ -98,8 +99,8 @@ export const Hero = () => {
 
         {/* Buttons */}
         <div className={clsx("flex", "gap-4", "flex-wrap", "justify-center")}>
-          <button
-            className={clsx(
+          <Link
+            href='/signin'           className={clsx(
               "px-8",
               "py-3",
               "font-semibold",
@@ -112,9 +113,10 @@ export const Hero = () => {
             )}
           >
             Start Demo
-          </button>
+          </Link>
 
-          <button
+          <Link
+            href='/services'
             className={clsx(
               "px-8",
               "py-3",
@@ -129,7 +131,7 @@ export const Hero = () => {
             )}
           >
             Explore Services
-          </button>
+          </Link>
         </div>
       </div>
     </section>
