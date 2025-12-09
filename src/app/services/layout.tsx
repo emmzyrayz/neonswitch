@@ -1,8 +1,13 @@
+'use client'
 import Link from "next/link";
 import React from "react";
 import { LuArrowLeft, LuMenu, LuX } from "react-icons/lu";
 
-export default function ServicesLayout({ children }) {
+interface ServicesLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function ServicesLayout({ children }: ServicesLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   const serviceLinks = [
@@ -47,7 +52,7 @@ export default function ServicesLayout({ children }) {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 border-2 border-black hover:bg-black hover:text-white transition-colors"
+              className="lg:hidden p-2 border-2 border-black hover:bg-black hover:text-white duration-700 transition-all ease-in-out"
             >
               {mobileMenuOpen ? (
                 <LuX className="w-5 h-5" />
