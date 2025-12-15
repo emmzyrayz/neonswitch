@@ -1,16 +1,17 @@
-import Sidebar from "./components/sidebar";
+// import Sidebar from "./components/sidebar"; egwha
 import Navbar from "./components/navbar";
 import DashboardCard from "./components/dashboardcard";
 import Footer from "./components/footer";
 import clsx from "clsx";
+import { UserContent } from "./components/contentboard";
 
 export default function Dashboard() {
   return (
     <div className={clsx("flex", "min-h-screen", "bg-[#0a0a0a]")}>
-      <Sidebar />
       <div className={clsx("flex-1", "flex", "flex-col")}>
         <Navbar />
         <main className={clsx("p-8", "flex-1", "overflow-y-auto")}>
+        <UserContent />
           <div
             className={clsx(
               "grid",

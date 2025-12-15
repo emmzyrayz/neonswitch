@@ -136,7 +136,7 @@ export default function Navbar() {
             "pb-4",
             "flex",
             "flex-col",
-            "gap-4"
+            "gap-1"
           )}
         >
           {NavLinks.map((item) => (
@@ -148,7 +148,9 @@ export default function Navbar() {
                 "hover:text-soft",
                 "transition",
                 "font-medium",
-                "cursor-pointer"
+                "cursor-pointer",
+                'hover:bg-muted/30 rounded-lg hover:pl-4',
+                'flex w-full p-2 items-center justify-start duration-700 ease-in-out transition-all'
               )}
             >
               {item.name}

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState } from "react";
 import clsx from "clsx";
 import {
@@ -10,11 +10,138 @@ import {
   LuCoins,
   LuAward,
   LuBell,
+  LuPhone,
+  LuZap,
+  LuTrendingUp,
+  LuGift,
+  LuCode,
+  LuStore,
+  LuUsers,
+  LuGrip
 } from "react-icons/lu";
+import { FaCrown } from "react-icons/fa6";
+import Link from "next/link";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showServices, setShowServices] = useState(false);
+
+  // Services data array
+  const services = [
+    {
+      id: "vtu",
+      title: "VTU & Bills Payment",
+      description:
+        "Seamless airtime, data, and utility bills payment services. Pay for electricity, cable TV, and more instantly.",
+      icon: LuPhone,
+      link: "/dashboard/vtu",
+      features: [
+        "Instant Airtime Top-up",
+        "Data Bundles",
+        "Electricity Bills",
+        "Cable TV Subscriptions",
+      ],
+    },
+    {
+      id: "virtual-numbers",
+      title: "Virtual Numbers",
+      description:
+        "Get disposable phone numbers for SMS verification across multiple platforms and services.",
+      icon: LuZap,
+      link: "/dashboard/virtual-numbers",
+      features: [
+        "Multi-Platform Support",
+        "Instant Activation",
+        "Privacy Protection",
+        "Affordable Rates",
+      ],
+    },
+    {
+      id: "social-purchases",
+      title: "Social Media Digital Purchases",
+      description:
+        "Purchase TikTok coins, Instagram boosts, and other social media services at competitive rates.",
+      icon: LuTrendingUp,
+      link: "/dashboard/social-purchases",
+      features: [
+        "TikTok Coins",
+        "Instagram Boosts",
+        "Fast Delivery",
+        "Secure Transactions",
+      ],
+    },
+    {
+      id: "wallet",
+      title: "Wallet + Coins + Platform Token",
+      description:
+        "Integrated digital wallet system with platform coins and tokens for seamless transactions.",
+      icon: LuWallet,
+      link: "/dashboard/wallet",
+      features: [
+        "Secure Wallet",
+        "Platform Coins",
+        "Token Integration",
+        "Easy Transfers",
+      ],
+    },
+    {
+      id: "rewards",
+      title: "Activity Reward Token System",
+      description:
+        "Earn rewards for platform activity and engagement. Convert tokens to coins or services.",
+      icon: LuGift,
+      link: "/dashboard/rewards",
+      features: [
+        "Activity Rewards",
+        "Token Conversion",
+        "Referral Bonuses",
+        "Daily Challenges",
+      ],
+    },
+    {
+      id: "api",
+      title: "Public API",
+      description:
+        "Developer-friendly API to integrate our services into your applications and platforms.",
+      icon: LuCode,
+      link: "/dashboard/api",
+      features: [
+        "RESTful API",
+        "Comprehensive Docs",
+        "Webhook Support",
+        "Rate Limiting",
+      ],
+    },
+    {
+      id: "vendor-marketplace",
+      title: "Vendor Marketplace",
+      description:
+        "A marketplace for vendors to offer services and products directly to platform users.",
+      icon: LuStore,
+      link: "/dashboard/vendor-marketplace",
+      features: [
+        "Vendor Registration",
+        "Product Listings",
+        "Secure Payments",
+        "Rating System",
+      ],
+    },
+    {
+      id: "social-marketplace",
+      title: "Social Account Marketplace",
+      description:
+        "Buy and sell social media accounts securely with escrow protection and verification.",
+      icon: LuUsers,
+      link: "/dashboard/social-marketplace",
+      features: [
+        "Account Verification",
+        "Escrow Protection",
+        "Secure Transfers",
+        "Wide Selection",
+      ],
+    },
+  ];
 
   // Mock user data - replace with actual data from your state management
   const userData = {
@@ -65,6 +192,128 @@ const Navbar = () => {
         <h2 className={clsx("text-xl", "font-bold", "text-white")}>
           Dashboard
         </h2>
+
+        {/* Services Menu - Desktop */}
+        <div className="relative">
+          <button
+            onClick={() => setShowServices(!showServices)}
+            className={clsx(
+              "hidden md:flex items-center gap-2 px-3 py-2 rounded-lg",
+              "bg-gray-800 hover:bg-gray-700 transition-all",
+              "border border-gray-700 text-gray-300 hover:text-white"
+            )}
+          >
+            <LuGrip className={clsx("w-4", "h-4")} />
+            <span className={clsx("text-sm", "font-medium")}>Services</span>
+            <LuChevronDown
+              className={clsx(
+                "w-4 h-4 transition-transform",
+                showServices && "rotate-180"
+              )}
+            />
+          </button>
+
+          {/* Services Mega Dropdown - Desktop */}
+          {showServices && (
+            <>
+              <div
+                className={clsx("fixed", "inset-0", "z-10")}
+                onClick={() => setShowServices(false)}
+              />
+              <div
+                className={clsx(
+                  "absolute left-0 top-full mt-2 w-[800px] z-20",
+                  "bg-gray-900 border border-gray-700 rounded-lg shadow-xl",
+                  "max-h-[600px] overflow-y-auto"
+                )}
+              >
+                <div className={clsx("p-4", "border-b", "border-gray-800")}>
+                  <h3
+                    className={clsx("text-lg", "font-semibold", "text-white")}
+                  >
+                    Our Services
+                  </h3>
+                  <p className={clsx("text-sm", "text-gray-400", "mt-1")}>
+                    Explore our wide range of digital services
+                  </p>
+                </div>
+
+                <div className={clsx("grid", "grid-cols-2", "gap-1", "p-2")}>
+                  {services.map((service) => {
+                    const IconComponent = service.icon;
+                    return (
+                      <Link
+                        key={service.id}
+                        href={service.link}
+                        onClick={() => setShowServices(false)}
+                        className={clsx(
+                          "p-4 rounded-lg hover:bg-gray-800 transition-all",
+                          "border border-transparent hover:border-gray-700",
+                          "group"
+                        )}
+                      >
+                        <div className={clsx("flex", "items-start", "gap-3")}>
+                          <div
+                            className={clsx(
+                              "w-10 h-10 rounded-lg flex items-center justify-center",
+                              "bg-blue-500/10 group-hover:bg-blue-500/20",
+                              "border border-blue-500/20 transition-all"
+                            )}
+                          >
+                            <IconComponent
+                              className={clsx("w-5", "h-5", "text-blue-400")}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <h4
+                              className={clsx(
+                                "text-sm",
+                                "font-semibold",
+                                "text-white",
+                                "mb-1"
+                              )}
+                            >
+                              {service.title}
+                            </h4>
+                            <p
+                              className={clsx(
+                                "text-xs",
+                                "text-gray-400",
+                                "line-clamp-2",
+                                "mb-2"
+                              )}
+                            >
+                              {service.description}
+                            </p>
+                            <div className={clsx("flex", "flex-wrap", "gap-1")}>
+                              {service.features
+                                .slice(0, 2)
+                                .map((feature, idx) => (
+                                  <span
+                                    key={idx}
+                                    className={clsx(
+                                      "text-xs",
+                                      "px-2",
+                                      "py-0.5",
+                                      "rounded",
+                                      "bg-gray-800",
+                                      "text-gray-300"
+                                    )}
+                                  >
+                                    {feature}
+                                  </span>
+                                ))}
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
 
         {/* Balance Info Cards */}
         <div className={clsx("hidden", "lg:flex", "items-center", "gap-3")}>
@@ -217,16 +466,18 @@ const Navbar = () => {
             <div
               className={clsx(
                 "w-8 h-8 rounded-full bg-linear-to-br",
-                "from-blue-500 to-purple-600 flex items-center justify-center"
+                "from-blue-500 to-purple-600 flex items-center justify-center relative"
               )}
             >
+              <FaCrown className={clsx('absolute', 'text-[12px]', 'text-yellow-400', '-bottom-1', '-right-1', 'md:hidden')} />
               <LuUser className={clsx("w-4", "h-4", "text-white")} />
             </div>
             <div
               className={clsx("hidden", "md:flex", "flex-col", "items-start")}
             >
-              <span className={clsx("text-sm", "font-medium", "text-white")}>
+              <span className={clsx("text-sm", "font-medium", "text-white", 'flex flex-row gap-2', 'items-center justify-center')}>
                 @{userData.username}
+                <FaCrown className={clsx('relative', 'w-full', 'h-full', 'text-[12px]', 'text-yellow-400')} />
               </span>
               <span className={clsx("text-xs", "text-gray-400", "lg:hidden")}>
                 {formatCurrency(userData.walletBalance)}
@@ -249,9 +500,10 @@ const Navbar = () => {
               />
               <div
                 className={clsx(
-                  "absolute right-0 top-full mt-2 w-56 z-20",
+                  "absolute right-0 top-full mt-2 z-20",
                   "bg-gray-900 border border-gray-700 rounded-lg shadow-xl",
-                  "py-2"
+                  "py-2 w-80 md:w-56",
+                  "max-h-[80vh] overflow-y-auto"
                 )}
               >
                 {/* Mobile Balance Info */}
@@ -328,7 +580,62 @@ const Navbar = () => {
                   </div>
                 </div>
 
-                <a
+                {/* Mobile Services Menu */}
+                <div
+                  className={clsx("md:hidden", "border-b", "border-gray-800")}
+                >
+                  <div className={clsx("px-4", "py-2", "bg-gray-800/50")}>
+                    <h4
+                      className={clsx(
+                        "text-xs",
+                        "font-semibold",
+                        "text-gray-400",
+                        "uppercase"
+                      )}
+                    >
+                      Services
+                    </h4>
+                  </div>
+                  {services.map((service) => {
+                    const IconComponent = service.icon;
+                    return (
+                      <Link
+                        key={service.id}
+                        href={service.link}
+                        onClick={() => setShowDropdown(false)}
+                        className={clsx(
+                          "flex items-center gap-3 px-4 py-2.5",
+                          "hover:bg-gray-800 transition-colors text-gray-300 hover:text-white"
+                        )}
+                      >
+                        <div
+                          className={clsx(
+                            "w-8 h-8 rounded-lg flex items-center justify-center",
+                            "bg-blue-500/10 border border-blue-500/20"
+                          )}
+                        >
+                          <IconComponent
+                            className={clsx("w-4", "h-4", "text-blue-400")}
+                          />
+                        </div>
+                        <span className="text-sm">{service.title}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                <Link
+                  href="/dashboard/settings"
+                  className={clsx(
+                    "flex items-center gap-3 px-4 py-2.5",
+                    "hover:bg-gray-800 transition-colors text-gray-300 hover:text-white"
+                  )}
+                >
+                  <LuCoins className={clsx("w-4", "h-4")} />
+                  <span className="text-sm">Subscription</span>
+                </Link>
+
+                <Link
                   href="/dashboard/profile"
                   className={clsx(
                     "flex items-center gap-3 px-4 py-2.5",
@@ -337,9 +644,9 @@ const Navbar = () => {
                 >
                   <LuUser className={clsx("w-4", "h-4")} />
                   <span className="text-sm">Profile</span>
-                </a>
+                </Link>
 
-                <a
+                <Link
                   href="/dashboard/settings"
                   className={clsx(
                     "flex items-center gap-3 px-4 py-2.5",
@@ -348,7 +655,7 @@ const Navbar = () => {
                 >
                   <LuSettings className={clsx("w-4", "h-4")} />
                   <span className="text-sm">Settings</span>
-                </a>
+                </Link>
 
                 <div className={clsx("border-t", "border-gray-800", "my-2")} />
 

@@ -5,6 +5,11 @@ import "./globals.css";
 import { baseMetadata } from "@/utils/metadata";
 import LoadingScreen from "@/components/loading";
 import { useEffect, useState } from "react";
+import LayoutWrapper from "@/components/layoutWrapper";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+import Ads from "@/components/Ads";
+import { NotFoundProvider } from "@/context/NotFoundContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -72,12 +77,22 @@ export default function RootLayout({
         <meta name="description" content={metadata.description as string} />
       </head>
       <body>
-        {" "}
-        <LoadingScreen
-          isLoading={isLoading}
-          onLoadingComplete={() => setShowContent(true)}
-        />
-        {showContent && children}
+      <NotFoundProvider>
+          <LoadingScreen
+            isLoading={isLoading}
+            onLoadingComplete={() => setShowContent(true)}
+          />
+          
+          {showContent && (
+            <LayoutWrapper
+              navbar={<Navbar />}
+              footer={<Footer />}
+              ads={<Ads />}
+            >
+              {children}
+            </LayoutWrapper>
+          )}
+        </NotFoundProvider>
       </body>
     </html>
   );

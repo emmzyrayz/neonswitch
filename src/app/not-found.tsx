@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/purity */
 'use client'
 import { useState, useEffect, useMemo } from "react";
+import { useNotFound } from "@/context/NotFoundContext";
 import {
   LuShoppingBag,
   LuZap,
@@ -11,13 +12,20 @@ import {
 import clsx from "clsx";
 
 export default function NotFound() {
+  const { setIsNotFound } = useNotFound();
   const [glitchActive, setGlitchActive] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  // Set not-found state on mount
+  useEffect(() => {
+    setIsNotFound(true);
+    return () => setIsNotFound(false);
+  }, [setIsNotFound]);
 
   // Generate particle positions once using useMemo
   const particles = useMemo(
     () =>
-      Array.from({ length: 60 }, () => ({
+      Array.from({ length: 100 }, () => ({
         left: Math.random() * 100,
         top: Math.random() * 100,
         delay: Math.random() * 3,
@@ -51,10 +59,11 @@ export default function NotFound() {
     <div
       className={clsx(
         "min-h-screen",
+        "min-w-screen",
         "bg-linear-to-br",
-        "from-slate-900",
-        "via-purple-900",
-        "to-slate-900",
+        "from-muted",
+        "via-black/80",
+        "to-muted",
         "flex",
         "items-center",
         "justify-center",
@@ -69,7 +78,7 @@ export default function NotFound() {
           className={clsx("absolute", "inset-0")}
           style={{
             backgroundImage:
-              "linear-gradient(#8b5cf6 1px, transparent 1px), linear-gradient(90deg, #8b5cf6 1px, transparent 1px)",
+              "linear-gradient(#F9FAFB 1px, transparent 1px), linear-gradient(90deg, #F9FAFB 1px, transparent 1px)",
             backgroundSize: "50px 50px",
             transform: `perspective(500px) rotateX(60deg) translateY(-50%)`,
           }}
@@ -84,7 +93,7 @@ export default function NotFound() {
             "absolute",
             "w-1",
             "h-1",
-            "bg-purple-400",
+            "bg-soft",
             "rounded-full",
             "animate-pulse"
           )}
@@ -119,7 +128,7 @@ export default function NotFound() {
               className={clsx(
                 "absolute",
                 "inset-0",
-                "bg-purple-500",
+                "bg-soft/60",
                 "blur-3xl",
                 "opacity-50",
                 "animate-pulse"
@@ -129,7 +138,7 @@ export default function NotFound() {
               className={clsx(
                 "w-24",
                 "h-24",
-                "text-purple-400",
+                "text-border",
                 "relative",
                 "animate-bounce"
               )}
@@ -137,12 +146,12 @@ export default function NotFound() {
             />
             <LuZap
               className={clsx(
-                "w-12",
-                "h-12",
-                "text-cyan-400",
+                "w-8",
+                "h-8",
+                "text-soft/80",
                 "absolute",
-                "top-0",
-                "right-0",
+                "-top-2",
+                "-right-2",
                 "animate-ping"
               )}
             />
@@ -157,16 +166,16 @@ export default function NotFound() {
               "md:text-9xl",
               "font-bold",
               "bg-linear-to-r",
-              "from-purple-400",
-              "via-pink-500",
-              "to-cyan-400",
+              "from-muted",
+              "via-soft",
+              "to-muted",
               "bg-clip-text",
               "text-transparent",
               glitchActive && "animate-pulse"
             )}
             style={{
               textShadow: glitchActive
-                ? "2px 2px #ff00de, -2px -2px #00ffff"
+                ? "2px 2px #111, -2px -2px #fff"
                 : "none",
               transform: glitchActive ? "translate(2px, -2px)" : "none",
             }}
@@ -182,7 +191,7 @@ export default function NotFound() {
                   "text-8xl",
                   "md:text-9xl",
                   "font-bold",
-                  "text-cyan-400",
+                  "text-black",
                   "opacity-70"
                 )}
                 style={{ transform: "translate(-2px, 2px)" }}
@@ -196,7 +205,7 @@ export default function NotFound() {
                   "text-8xl",
                   "md:text-9xl",
                   "font-bold",
-                  "text-pink-400",
+                  "text-soft",
                   "opacity-70"
                 )}
                 style={{ transform: "translate(2px, -2px)" }}
@@ -222,7 +231,7 @@ export default function NotFound() {
           <p
             className={clsx(
               "text-lg",
-              "text-purple-200",
+              "text-soft/60",
               "max-w-md",
               "mx-auto"
             )}
@@ -251,9 +260,9 @@ export default function NotFound() {
               "px-8",
               "py-4",
               "bg-linear-to-r",
-              "from-purple-600",
-              "to-pink-600",
-              "text-white",
+              "from-muted",
+              "to-soft",
+              "text-black",
               "font-semibold",
               "rounded-lg",
               "overflow-hidden",
@@ -271,12 +280,12 @@ export default function NotFound() {
                 "absolute",
                 "inset-0",
                 "bg-linear-to-r",
-                "from-cyan-600",
-                "to-purple-600",
+                "from-soft",
+                "to-muted",
                 "opacity-0",
                 "group-hover:opacity-100",
                 "transition-opacity",
-                "duration-300"
+                "duration-500"
               )}
             />
             <span
@@ -302,16 +311,16 @@ export default function NotFound() {
               "py-4",
               "bg-transparent",
               "border-2",
-              "border-purple-400",
-              "text-purple-300",
+              "border-muted",
+              "text-soft",
               "font-semibold",
               "rounded-lg",
               "overflow-hidden",
               "transition-all",
               "duration-300",
               "hover:scale-105",
-              "hover:border-cyan-400",
-              "hover:text-cyan-300",
+              "hover:border-soft",
+              "hover:text-soft/70",
               "w-full",
               "sm:w-auto"
             )}
@@ -343,10 +352,10 @@ export default function NotFound() {
           )}
         >
           <a
-            href="/shop"
+            href="/services"
             className={clsx(
-              "text-purple-300",
-              "hover:text-cyan-300",
+              "text-soft/50",
+              "hover:text-soft",
               "transition-colors",
               "flex",
               "items-center",
@@ -357,13 +366,13 @@ export default function NotFound() {
             <LuShoppingBag
               className={clsx("w-4", "h-4", "group-hover:animate-bounce")}
             />
-            Browse Shop
+            Browse Services
           </a>
           <a
-            href="/search"
+            href="/contact"
             className={clsx(
-              "text-purple-300",
-              "hover:text-cyan-300",
+              "text-soft/40",
+              "hover:text-soft",
               "transition-colors",
               "flex",
               "items-center",
@@ -374,7 +383,7 @@ export default function NotFound() {
             <LuSearch
               className={clsx("w-4", "h-4", "group-hover:animate-bounce")}
             />
-            Search Products
+            Contact Us
           </a>
         </div>
 
@@ -386,7 +395,7 @@ export default function NotFound() {
               "w-32",
               "bg-linear-to-r",
               "from-transparent",
-              "via-purple-500",
+              "via-muted",
               "to-transparent",
               "animate-pulse"
             )}
@@ -404,7 +413,7 @@ export default function NotFound() {
           "h-32",
           "border-t-2",
           "border-l-2",
-          "border-purple-500/30"
+          "border-soft/60"
         )}
       />
       <div
@@ -416,7 +425,7 @@ export default function NotFound() {
           "h-32",
           "border-t-2",
           "border-r-2",
-          "border-cyan-500/30"
+          "border-muted/30"
         )}
       />
       <div
@@ -428,7 +437,7 @@ export default function NotFound() {
           "h-32",
           "border-b-2",
           "border-l-2",
-          "border-cyan-500/30"
+          "border-muted/30"
         )}
       />
       <div
@@ -440,7 +449,7 @@ export default function NotFound() {
           "h-32",
           "border-b-2",
           "border-r-2",
-          "border-purple-500/30"
+          "border-muted/30"
         )}
       />
     </div>
