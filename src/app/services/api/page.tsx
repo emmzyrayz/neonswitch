@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import clsx from "clsx";
 import React from "react";
 import {
@@ -12,55 +12,71 @@ import {
 } from "react-icons/lu";
 
 export default function APIServicePage() {
-  const [copiedEndpoint, setCopiedEndpoint] = React.useState<number | null>(null);
+  const [copiedEndpoint, setCopiedEndpoint] = React.useState<number | null>(
+    null
+  );
 
-  const features = [
-    {
-      icon: LuZap,
-      title: "Lightning Fast",
-      description:
-        "Average response time under 200ms with 99.9% uptime guarantee",
-    },
-    {
-      icon: LuShield,
-      title: "Secure Authentication",
-      description: "API key and OAuth 2.0 support with request signing",
-    },
-    {
-      icon: LuBookOpen,
-      title: "Comprehensive Docs",
-      description:
-        "Detailed documentation with code examples in multiple languages",
-    },
-    {
-      icon: LuTerminal,
-      title: "Developer Friendly",
-      description: "RESTful design with JSON responses and webhook support",
-    },
-  ];
+ const features = [
+  {
+    icon: LuZap,
+    title: "Low-Latency Infrastructure",
+    description:
+      "Optimized API architecture with sub-200ms average response times and high availability.",
+  },
+  {
+    icon: LuShield,
+    title: "Secure by Default",
+    description:
+      "API key authentication with scoped permissions, OAuth 2.0 support, and request signing.",
+  },
+  {
+    icon: LuBookOpen,
+    title: "Production-Ready Documentation",
+    description:
+      "Clear documentation with real-world examples, error references, and versioned endpoints.",
+  },
+  {
+    icon: LuTerminal,
+    title: "Developer-First Design",
+    description:
+      "RESTful endpoints, predictable JSON responses, webhooks, and idempotent requests.",
+  },
+];
+
 
   const endpoints = [
     {
       method: "POST",
       path: "/api/v1/vtu/airtime",
-      description: "Purchase airtime",
+      description: "Purchase airtime via VTU service",
     },
     {
       method: "POST",
       path: "/api/v1/vtu/data",
-      description: "Purchase data bundle",
+      description: "Purchase data bundles via VTU service",
     },
     {
       method: "GET",
-      path: "/api/v1/wallet/balance",
-      description: "Check wallet balance",
+      path: "/api/v1/neonpay/wallet/balance",
+      description: "Retrieve NeonPay wallet balance",
+    },
+    {
+      method: "POST",
+      path: "/api/v1/neonpay/transfer",
+      description: "Transfer funds between NeonPay wallets",
     },
     {
       method: "POST",
       path: "/api/v1/virtual-numbers",
-      description: "Generate virtual number",
+      description: "Generate a virtual phone number",
+    },
+    {
+      method: "POST",
+      path: "/api/v1/neonaccess/orders",
+      description: "Create an order on NeonAccess marketplace",
     },
   ];
+  
 
   const codeExample = `const axios = require('axios');
 
@@ -129,9 +145,15 @@ console.log(response.data);`;
   };
 
   return (
-    <div className={clsx("min-h-screen", "bg-white")}>
+    <div
+      className={clsx(
+        "min-h-screen mt-[20px]",
+        "bg-white",
+        "flex flex-col items-center justify-center px-[20px]"
+      )}
+    >
       {/* Hero */}
-      <div className={clsx("border-b-2", "border-black")}>
+      <div className={clsx("border-b-2", "border-muted")}>
         <div
           className={clsx(
             "max-w-7xl",
@@ -148,7 +170,7 @@ console.log(response.data);`;
               className={clsx(
                 "inline-block",
                 "border-2",
-                "border-black",
+                "border-muted rounded-xl",
                 "px-4",
                 "py-1",
                 "mb-6"
@@ -156,7 +178,7 @@ console.log(response.data);`;
             >
               <span
                 className={clsx(
-                  "text-sm",
+                  "text-sm text-muted",
                   "font-bold",
                   "uppercase",
                   "tracking-wide"
@@ -166,13 +188,15 @@ console.log(response.data);`;
               </span>
             </div>
 
-            <div className={clsx("flex", "items-start", "gap-6", "mb-6")}>
+            <div
+              className={clsx("flex flex-row", "items-center", "gap-6", "mb-6")}
+            >
               <div
                 className={clsx(
                   "p-4",
                   "border-2",
-                  "border-black",
-                  "bg-black",
+                  "border-muted rounded-2xl",
+                  "bg-muted",
                   "text-white"
                 )}
               >
@@ -188,7 +212,7 @@ console.log(response.data);`;
                     "md:text-6xl",
                     "font-bold",
                     "tracking-tight",
-                    "mb-4"
+                    "text-muted"
                   )}
                 >
                   Public API
@@ -205,43 +229,44 @@ console.log(response.data);`;
                 "mb-8"
               )}
             >
-              Build powerful integrations with our comprehensive REST API.
-              Access all platform features programmatically with simple,
+              Build powerful integrations with our unified REST API.
+              Programmatically access VTU services, NeonPay wallet operations,
+              NeonAccess marketplaces, and platform utilities through secure,
               well-documented endpoints.
             </p>
 
             <div className={clsx("flex", "flex-col", "sm:flex-row", "gap-4")}>
               <button
                 className={clsx(
-                  "bg-black",
+                  "bg-muted",
                   "text-white",
                   "px-8",
                   "py-4",
                   "text-lg",
                   "font-semibold",
-                  "hover:bg-gray-800",
+                  "hover:bg-border hover:text-muted",
                   "transition-colors",
                   "border-2",
-                  "border-black"
+                  "border-muted rounded-xl"
                 )}
               >
-                Get API Key
+                Generate API Key
               </button>
               <button
                 className={clsx(
                   "bg-white",
-                  "text-black",
+                  "text-muted",
                   "px-8",
                   "py-4",
                   "text-lg",
                   "font-semibold",
-                  "hover:bg-gray-100",
+                  "hover:bg-muted/20",
                   "transition-colors",
                   "border-2",
-                  "border-black"
+                  "border-muted rounded-2xl"
                 )}
               >
-                View Documentation
+                Explore API Docs
               </button>
             </div>
           </div>
@@ -257,7 +282,8 @@ console.log(response.data);`;
           "sm:px-6",
           "lg:px-8",
           "py-16",
-          "sm:py-20"
+          "sm:py-20",
+          "text-muted"
         )}
       >
         <h2 className={clsx("text-3xl", "sm:text-4xl", "font-bold", "mb-12")}>
@@ -271,12 +297,12 @@ console.log(response.data);`;
                 key={feature.title}
                 className={clsx(
                   "border-2",
-                  "border-black",
+                  "border-muted rounded-2xl",
                   "p-8",
-                  "hover:bg-black",
+                  "hover:bg-muted",
                   "hover:text-white",
                   "transition-colors",
-                  "duration-300",
+                  "duration-700",
                   "group"
                 )}
               >
@@ -296,7 +322,9 @@ console.log(response.data);`;
       </div>
 
       {/* Code Example */}
-      <div className={clsx("border-t-2", "border-black", "bg-gray-50")}>
+      <div
+        className={clsx("border-t-2", "border-muted text-muted", "bg-gray-50")}
+      >
         <div
           className={clsx(
             "max-w-7xl",
@@ -311,15 +339,15 @@ console.log(response.data);`;
           <h2 className={clsx("text-3xl", "sm:text-4xl", "font-bold", "mb-4")}>
             Quick Start Example
           </h2>
-          <p className={clsx("text-lg", "text-gray-600", "mb-8")}>
+          <p className={clsx("text-lg", "text-muted/70", "mb-8")}>
             Get started in minutes with our simple API. Here&apos;s how to make
             your first request:
           </p>
           <div
             className={clsx(
               "border-2",
-              "border-black",
-              "bg-black",
+              "border-muted rounded-2xl",
+              "bg-muted",
               "text-white",
               "p-6",
               "font-mono",
@@ -341,13 +369,14 @@ console.log(response.data);`;
           "sm:px-6",
           "lg:px-8",
           "py-16",
-          "sm:py-20"
+          "sm:py-20",
+          "text-muted"
         )}
       >
         <h2 className={clsx("text-3xl", "sm:text-4xl", "font-bold", "mb-4")}>
           Popular Endpoints
         </h2>
-        <p className={clsx("text-lg", "text-gray-600", "mb-8")}>
+        <p className={clsx("text-lg", "text-muted/70", "mb-8")}>
           Access all platform services through our RESTful API endpoints
         </p>
         <div className="space-y-4">
@@ -356,9 +385,9 @@ console.log(response.data);`;
               key={idx}
               className={clsx(
                 "border-2",
-                "border-black",
+                "border-muted rounded-2xl",
                 "p-6",
-                "hover:bg-gray-50",
+                "hover:bg-muted/10",
                 "transition-colors",
                 "group"
               )}
@@ -382,7 +411,7 @@ console.log(response.data);`;
                         "inline-block",
                         "px-3",
                         "py-1",
-                        "bg-black",
+                        "bg-muted rounded-[6px]",
                         "text-white",
                         "text-xs",
                         "font-bold"
@@ -394,7 +423,7 @@ console.log(response.data);`;
                       {endpoint.path}
                     </code>
                   </div>
-                  <p className="text-gray-600">{endpoint.description}</p>
+                  <p className="text-muted/70">{endpoint.description}</p>
                 </div>
                 <button
                   onClick={() => copyToClipboard(endpoint.path, idx)}
@@ -405,8 +434,8 @@ console.log(response.data);`;
                     "px-4",
                     "py-2",
                     "border-2",
-                    "border-black",
-                    "hover:bg-black",
+                    "border-muted rounded-xl",
+                    "hover:bg-muted",
                     "hover:text-white",
                     "transition-colors",
                     "text-sm",
@@ -433,11 +462,11 @@ console.log(response.data);`;
           <button
             className={clsx(
               "border-2",
-              "border-black",
+              "border-muted rounded-xl",
               "px-8",
               "py-3",
               "font-semibold",
-              "hover:bg-black",
+              "hover:bg-muted",
               "hover:text-white",
               "transition-colors"
             )}
@@ -448,7 +477,7 @@ console.log(response.data);`;
       </div>
 
       {/* Pricing */}
-      <div className={clsx("border-t-2", "border-black", "bg-gray-50")}>
+      <div className={clsx("border-t-2", "border-muted", "bg-gray-50")}>
         <div
           className={clsx(
             "max-w-7xl",
@@ -457,7 +486,8 @@ console.log(response.data);`;
             "sm:px-6",
             "lg:px-8",
             "py-16",
-            "sm:py-20"
+            "sm:py-20",
+            "text-muted"
           )}
         >
           <h2
@@ -474,7 +504,7 @@ console.log(response.data);`;
           <p
             className={clsx(
               "text-lg",
-              "text-gray-600",
+              "text-muted/70",
               "mb-12",
               "text-center",
               "max-w-2xl",
@@ -491,11 +521,11 @@ console.log(response.data);`;
             {pricingTiers.map((tier) => (
               <div
                 key={tier.name}
-                className={`border-2 border-black p-8 ${
+                className={`border-2 border-muted rounded-2xl p-8 ${
                   tier.highlighted
-                    ? "bg-black text-white"
-                    : "bg-white hover:bg-black hover:text-white"
-                } transition-colors duration-300 group`}
+                    ? "bg-muted text-white"
+                    : "bg-white hover:bg-muted hover:text-white"
+                } transition-colors duration-500 group cursor-pointer`}
               >
                 <h3 className={clsx("text-2xl", "font-bold", "mb-2")}>
                   {tier.name}
@@ -507,8 +537,8 @@ console.log(response.data);`;
                   <div
                     className={`text-sm ${
                       tier.highlighted
-                        ? "text-gray-300"
-                        : "text-gray-600 group-hover:text-gray-300"
+                        ? "text-muted/30"
+                        : "text-muted/60 group-hover:text-muted/30"
                     }`}
                   >
                     {tier.requests} requests/month
@@ -530,14 +560,14 @@ console.log(response.data);`;
                         className={`w-4 h-4 mt-0.5 shrink-0 ${
                           tier.highlighted
                             ? "text-white"
-                            : "text-black group-hover:text-white"
+                            : "text-muted group-hover:text-white"
                         }`}
                       />
                       <span
                         className={
                           tier.highlighted
-                            ? "text-gray-200"
-                            : "text-gray-700 group-hover:text-gray-200"
+                            ? "text-soft"
+                            : "text-muted group-hover:text-soft"
                         }
                       >
                         {feature}
@@ -547,10 +577,10 @@ console.log(response.data);`;
                 </ul>
 
                 <button
-                  className={`w-full py-3 px-6 font-semibold border-2 transition-colors ${
+                  className={`w-full py-3 px-6 font-semibold border-2 transition-colors rounded-2xl ${
                     tier.highlighted
-                      ? "bg-white text-black border-white hover:bg-gray-100"
-                      : "bg-black text-white border-black group-hover:bg-white group-hover:text-black group-hover:border-white"
+                      ? "bg-white text-muted border-white hover:bg-soft"
+                      : "bg-muted text-white border-muted group-hover:bg-white group-hover:text-muted group-hover:border-white hover:scale-x-105"
                   }`}
                 >
                   {tier.name === "Enterprise" ? "Contact Sales" : "Get Started"}
@@ -579,7 +609,7 @@ console.log(response.data);`;
             "grid-cols-2",
             "md:grid-cols-4",
             "gap-8",
-            "text-center"
+            "text-center text-muted"
           )}
         >
           <div>
@@ -587,7 +617,7 @@ console.log(response.data);`;
             <div
               className={clsx(
                 "text-sm",
-                "text-gray-600",
+                "text-muted/70",
                 "uppercase",
                 "tracking-wide"
               )}
@@ -602,7 +632,7 @@ console.log(response.data);`;
             <div
               className={clsx(
                 "text-sm",
-                "text-gray-600",
+                "text-muted/70",
                 "uppercase",
                 "tracking-wide"
               )}
@@ -615,7 +645,7 @@ console.log(response.data);`;
             <div
               className={clsx(
                 "text-sm",
-                "text-gray-600",
+                "text-muted/70",
                 "uppercase",
                 "tracking-wide"
               )}
@@ -628,7 +658,7 @@ console.log(response.data);`;
             <div
               className={clsx(
                 "text-sm",
-                "text-gray-600",
+                "text-muted/70",
                 "uppercase",
                 "tracking-wide"
               )}
@@ -641,7 +671,12 @@ console.log(response.data);`;
 
       {/* CTA */}
       <div
-        className={clsx("border-t-2", "border-black", "bg-black", "text-white")}
+        className={clsx(
+          "border-t-2",
+          "border-muted rounded-2xl",
+          "bg-muted",
+          "text-white"
+        )}
       >
         <div
           className={clsx(
@@ -674,18 +709,18 @@ console.log(response.data);`;
             <button
               className={clsx(
                 "bg-white",
-                "text-black",
+                "text-muted",
                 "px-8",
                 "py-4",
                 "text-lg",
                 "font-semibold",
-                "hover:bg-gray-100",
-                "transition-colors",
+                "hover:bg-muted/20 hover:text-soft rounded-xl",
+                "transition-colors duration-500",
                 "border-2",
                 "border-white"
               )}
             >
-              Get API Key
+              Generate API Key
             </button>
             <button
               className={clsx(
@@ -696,13 +731,13 @@ console.log(response.data);`;
                 "text-lg",
                 "font-semibold",
                 "hover:bg-white",
-                "hover:text-black",
-                "transition-colors",
-                "border-2",
+                "hover:text-muted",
+                "transition-colors duration-500",
+                "border-2 rounded-xl",
                 "border-white"
               )}
             >
-              Read Documentation
+              Explore API Docs
             </button>
           </div>
         </div>

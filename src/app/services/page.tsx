@@ -7,10 +7,10 @@ import {
   LuPhone,
   LuTrendingUp,
   LuWallet,
-  LuGift,
+  // LuGift,
   LuCode,
-  LuStore,
-  LuUsers,
+  // LuStore,
+  // LuUsers,
 } from "react-icons/lu";
 
 const services = [
@@ -32,101 +32,60 @@ const services = [
     id: "virtual-numbers",
     title: "Virtual Numbers",
     description:
-      "Get disposable phone numbers for SMS verification across multiple platforms and services.",
+      "Disposable and long-term virtual phone numbers for SMS verification across multiple platforms.",
     icon: LuZap,
-    link: "/services/virtual-numbers",
+    link: "/services/virtual_number",
     features: [
       "Multi-Platform Support",
       "Instant Activation",
       "Privacy Protection",
-      "Affordable Rates",
+      "Flexible Pricing",
     ],
   },
   {
-    id: "social-purchases",
-    title: "Social Media Digital Purchases",
+    id: "neonaccess",
+    title: "NeonAccess",
     description:
-      "Purchase TikTok coins, Instagram boosts, and other social media services at competitive rates.",
+      "A verified digital access marketplace for social platforms, subscriptions, and online services with escrow protection.",
     icon: LuTrendingUp,
-    link: "/services/social-purchases",
+    link: "/services/neonaccess",
     features: [
-      "TikTok Coins",
-      "Instagram Boosts",
-      "Fast Delivery",
-      "Secure Transactions",
+      "Social Coins & Boosts",
+      "Verified Digital Accounts",
+      "Escrow & Monitoring",
+      "Trusted Vendors",
     ],
   },
   {
-    id: "wallet",
-    title: "Wallet + Coins + Platform Token",
+    id: "neonpay",
+    title: "NeonPay",
     description:
-      "Integrated digital wallet system with platform coins and tokens for seamless transactions.",
+      "Integrated wallet system with platform coins, activity-based tokens, and secure withdrawals.",
     icon: LuWallet,
-    link: "/services/wallet",
+    link: "/services/neonpay",
     features: [
       "Secure Wallet",
       "Platform Coins",
-      "Token Integration",
-      "Easy Transfers",
-    ],
-  },
-  {
-    id: "rewards",
-    title: "Activity Reward Token System",
-    description:
-      "Earn rewards for platform activity and engagement. Convert tokens to coins or services.",
-    icon: LuGift,
-    link: "/services/rewards",
-    features: [
-      "Activity Rewards",
-      "Token Conversion",
-      "Referral Bonuses",
-      "Daily Challenges",
+      "Reward Tokens",
+      "Deposits & Withdrawals",
     ],
   },
   {
     id: "api",
     title: "Public API",
     description:
-      "Developer-friendly API to integrate our services into your applications and platforms.",
+      "Developer-friendly API for integrating VTU, wallet, and digital services into external platforms.",
     icon: LuCode,
     link: "/services/api",
     features: [
       "RESTful API",
       "Comprehensive Docs",
-      "Webhook Support",
+      "Webhook Events",
       "Rate Limiting",
     ],
   },
-  {
-    id: "vendor-marketplace",
-    title: "Vendor Marketplace",
-    description:
-      "A marketplace for vendors to offer services and products directly to platform users.",
-    icon: LuStore,
-    link: "/services/vendor-marketplace",
-    features: [
-      "Vendor Registration",
-      "Product Listings",
-      "Secure Payments",
-      "Rating System",
-    ],
-  },
-  {
-    id: "social-marketplace",
-    title: "Social Account Marketplace",
-    description:
-      "Buy and sell social media accounts securely with escrow protection and verification.",
-    icon: LuUsers,
-    link: "/services/social-marketplace",
-    features: [
-      "Account Verification",
-      "Escrow Protection",
-      "Secure Transfers",
-      "Wide Selection",
-    ],
-  },
 ];
+
 
 export default function ServicesPage() {
   return (

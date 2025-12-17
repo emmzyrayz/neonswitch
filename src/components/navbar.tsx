@@ -149,7 +149,7 @@ export default function Navbar() {
                 "transition",
                 "font-medium",
                 "cursor-pointer",
-                'hover:bg-muted/30 rounded-lg hover:pl-4',
+                'hover:bg-black rounded-lg hover:pl-4',
                 'flex w-full p-2 items-center justify-start duration-700 ease-in-out transition-all'
               )}
             >

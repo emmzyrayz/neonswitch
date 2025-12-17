@@ -1,8 +1,8 @@
 // import Image from "next/image";
 
-import Footer from "@/components/footer";
+// import Footer from "@/components/footer";
 import { Hero } from "@/components/hero";
-import Navbar from "@/components/navbar";
+// import Navbar from "@/components/navbar";
 import ServiceCards from "@/components/servicecard";
 // import VirtualNumber from "@/components/virtualnumber";
 // import VTU from "@/components/vtu";
@@ -20,10 +20,8 @@ export default function Home() {
         "justify-center"
       )}
     >
-      <Navbar />
       <Hero />
       <ServiceCards />
-      <Footer />
     </div>
   );
 }

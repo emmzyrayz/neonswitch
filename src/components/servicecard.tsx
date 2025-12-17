@@ -29,7 +29,7 @@ const services = [
 
 export default function ServiceCards() {
   return (
-    <section className={clsx('py-20', 'bg-black', 'text-soft', 'rounded-lg', 'my-3', 'w-[95%]', 'font-sora')}>
+    <section className={clsx('py-20', 'bg-black', 'text-soft', 'rounded-lg', 'm-3', 'w-full', 'font-sora')}>
       <div className={clsx('max-w-6xl', 'mx-auto', 'px-6', 'text-center')}>
         <h2 className={clsx('md:text-4xl', 'text-3xl', 'font-bold', 'mb-12')}>Our Services</h2>
 
@@ -38,7 +38,7 @@ export default function ServiceCards() {
             <div
               key={i}
               className={`p-6 rounded-xl border ${s.color} 
-                bg-white/5 backdrop-blur-md hover:bg-white/10 
+                bg-white/5 backdrop-blur-md hover:bg-white/10 cursor-pointer 
                 transition ${s.glow}`}
             >
               <h3 className={clsx('text-2xl', 'font-bold', 'mb-3')}>{s.title}</h3>

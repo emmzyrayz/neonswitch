@@ -72,7 +72,7 @@ const routeConfigs: Record<string, LayoutConfig> = {
   // DASHBOARD ROUTES - Navbar only, no footer/ads
   // ============================================
   '/dashboard': {
-    showNavbar: true,
+    showNavbar: false,
     showFooter: false,
     showAds: false,
     containerClass: 'bg-gray-50',

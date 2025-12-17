@@ -10,6 +10,7 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import Ads from "@/components/Ads";
 import { NotFoundProvider } from "@/context/NotFoundContext";
+import clsx from "clsx";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -76,7 +77,15 @@ export default function RootLayout({
         <title>{metadata.title as string}</title>
         <meta name="description" content={metadata.description as string} />
       </head>
-      <body>
+      <body className={clsx(
+        "flex",
+        "flex-col",
+        "w-full",
+        "h-full",
+        "items-center",
+        "justify-center",
+        ''
+      )}>
       <NotFoundProvider>
           <LoadingScreen
             isLoading={isLoading}

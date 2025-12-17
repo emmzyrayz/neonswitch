@@ -132,7 +132,7 @@ const userData: UserData = {
     { 
       id: 4, 
       icon: FaUsers, 
-      label: "Social Profile", 
+      label: "Neon Access", 
       description: "Manage social profiles",
       color: "bg-pink-500/20 hover:bg-pink-500/30"
     },
@@ -140,6 +140,13 @@ const userData: UserData = {
       id: 5, 
       icon: FaCode, 
       label: "API", 
+      description: "Developer access",
+      color: "bg-orange-500/20 hover:bg-orange-500/30"
+    },
+    { 
+      id: 6, 
+      icon: FaWallet, 
+      label: "NeonPay", 
       description: "Developer access",
       color: "bg-orange-500/20 hover:bg-orange-500/30"
     }
@@ -152,23 +159,23 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className={clsx('fixed', 'inset-0', 'z-50', 'flex', 'items-center', 'justify-center', 'p-4', 'bg-black/60', 'backdrop-blur-sm')}
       onClick={onClose}
     >
       <div 
-        className="relative w-full max-w-2xl max-h-[80vh] bg-gray-900 rounded-2xl shadow-2xl overflow-hidden"
+        className={clsx('relative', 'w-full', 'max-w-2xl', 'max-h-[80vh]', 'bg-gray-900', 'rounded-2xl', 'shadow-2xl', 'overflow-hidden')}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-gray-800/90 backdrop-blur-sm border-b border-white/10">
-          <h2 className="text-lg font-semibold text-white">{title}</h2>
+        <div className={clsx('sticky', 'top-0', 'z-10', 'flex', 'items-center', 'justify-between', 'p-4', 'bg-gray-800/90', 'backdrop-blur-sm', 'border-b', 'border-white/10')}>
+          <h2 className={clsx('text-lg', 'font-semibold', 'text-white')}>{title}</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+            className={clsx('p-2', 'hover:bg-white/10', 'rounded-lg', 'transition-colors')}
           >
             <FaTimes className="text-white" />
           </button>
         </div>
-        <div className="p-4 overflow-y-auto max-h-[calc(80vh-80px)]">
+        <div className={clsx('p-4', 'overflow-y-auto', 'max-h-[calc(80vh-80px)]')}>
           {children}
         </div>
       </div>
@@ -187,15 +194,15 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ transaction, onClick 
     onClick={onClick}
   >
     <div className="flex-1">
-      <div className="font-medium text-white">{transaction.category}</div>
-      <div className="text-[11px] text-gray-400 mt-1">{transaction.description}</div>
+      <div className={clsx('font-medium', 'text-white')}>{transaction.category}</div>
+      <div className={clsx('text-[11px]', 'text-gray-400', 'mt-1')}>{transaction.description}</div>
     </div>
-    <div className="flex flex-row sm:flex-col items-end gap-2 sm:gap-1">
-      <div className="flex flex-row gap-1 text-[12px] text-gray-400">
+    <div className={clsx('flex', 'flex-row', 'sm:flex-col', 'items-end', 'gap-2', 'sm:gap-1')}>
+      <div className={clsx('flex', 'flex-row', 'gap-1', 'text-[12px]', 'text-gray-400')}>
         <span>{transaction.time}</span>
         <span>{transaction.date}</span>
       </div>
-      <div className="flex flex-row gap-1 text-green-400 font-bold">
+      <div className={clsx('flex', 'flex-row', 'gap-1', 'text-green-400', 'font-bold')}>
         <span>{transaction.currency}</span>
         <span>{transaction.amount}</span>
       </div>
@@ -227,24 +234,24 @@ export const UserContent: React.FC = () => {
           'flex flex-col sm:flex-row w-full gap-4',
           'items-start sm:items-center justify-between'
         )}>
-          <div className="flex flex-col gap-2 flex-1">
-            <div className="flex flex-row gap-2 items-center text-white font-medium">
+          <div className={clsx('flex', 'flex-col', 'gap-2', 'flex-1')}>
+            <div className={clsx('flex', 'flex-row', 'gap-2', 'items-center', 'text-white', 'font-medium')}>
               <FaUser className="text-blue-400" />
               <span>{userData.personal.name}</span>
             </div>
-            <div className="flex flex-row gap-2 items-center text-gray-400">
+            <div className={clsx('flex', 'flex-row', 'gap-2', 'items-center', 'text-gray-400')}>
               <FaPhone className="text-green-400" />
               <span>{userData.personal.phone}</span>
             </div>
           </div>
-          <div className="flex flex-row sm:flex-col gap-4 sm:gap-2">
-            <div className="flex flex-row gap-2 items-center bg-amber-500/20 px-3 py-2 rounded-lg">
+          <div className={clsx('flex', 'flex-row', 'sm:flex-col', 'gap-4', 'sm:gap-2')}>
+            <div className={clsx('flex', 'flex-row', 'gap-2', 'items-center', 'bg-amber-500/20', 'px-3', 'py-2', 'rounded-lg')}>
               <FaCoins className="text-amber-400" />
-              <span className="font-bold text-white">{userData.personal.coinBalance.toLocaleString()}</span>
+              <span className={clsx('font-bold', 'text-white')}>{userData.personal.coinBalance.toLocaleString()}</span>
             </div>
-            <div className="flex flex-row gap-2 items-center bg-purple-500/20 px-3 py-2 rounded-lg">
+            <div className={clsx('flex', 'flex-row', 'gap-2', 'items-center', 'bg-purple-500/20', 'px-3', 'py-2', 'rounded-lg')}>
               <FaKey className="text-purple-400" />
-              <span className="font-bold text-white">{userData.personal.tokenBalance}</span>
+              <span className={clsx('font-bold', 'text-white')}>{userData.personal.tokenBalance}</span>
             </div>
           </div>
         </div>
@@ -260,12 +267,12 @@ export const UserContent: React.FC = () => {
             return (
               <div 
                 key={index}
-                className="flex flex-row gap-2 items-center px-3 py-2 bg-white/10 rounded-lg"
+                className={clsx('flex', 'flex-row', 'gap-2', 'items-center', 'px-3', 'py-2', 'bg-white/10', 'rounded-lg')}
               >
                 <Icon className="text-cyan-400" />
-                <div className="flex flex-col">
-                  <span className="text-[10px] text-gray-500">{item.label}</span>
-                  <span className="text-white font-medium">{item.value}</span>
+                <div className={clsx('flex', 'flex-col')}>
+                  <span className={clsx('text-[10px]', 'text-gray-500')}>{item.label}</span>
+                  <span className={clsx('text-white', 'font-medium')}>{item.value}</span>
                 </div>
               </div>
             );
@@ -285,8 +292,8 @@ export const UserContent: React.FC = () => {
             )}
             onClick={() => setIsHistoryModalOpen(true)}
           >
-            <span className="font-semibold text-white">Transaction History</span>
-            <span className="text-blue-400 text-[12px] hover:underline">View All...</span>
+            <span className={clsx('font-semibold', 'text-white')}>Transaction History</span>
+            <span className={clsx('text-blue-400', 'text-[12px]', 'hover:underline')}>View All...</span>
           </div>
           
           {userData.transactions.slice(0, 3).map((transaction: Transaction) => (
@@ -315,10 +322,10 @@ export const UserContent: React.FC = () => {
                   shortcut.color
                 )}
               >
-                <Icon className="text-2xl text-white" />
+                <Icon className={clsx('text-2xl', 'text-white')} />
                 <div className="text-center">
-                  <div className="text-[12px] font-semibold text-white">{shortcut.label}</div>
-                  <div className="text-[10px] text-gray-400 mt-1">{shortcut.description}</div>
+                  <div className={clsx('text-[12px]', 'font-semibold', 'text-white')}>{shortcut.label}</div>
+                  <div className={clsx('text-[10px]', 'text-gray-400', 'mt-1')}>{shortcut.description}</div>
                 </div>
               </button>
             );
@@ -336,24 +343,24 @@ export const UserContent: React.FC = () => {
         title={selectedTransaction ? "Transaction Details" : "All Transactions"}
       >
         {selectedTransaction ? (
-          <div className="space-y-4 text-gray-300">
-            <div className="p-4 bg-white/5 rounded-lg space-y-3">
+          <div className={clsx('space-y-4', 'text-gray-300')}>
+            <div className={clsx('p-4', 'bg-white/5', 'rounded-lg', 'space-y-3')}>
               <div>
-                <span className="text-gray-500 text-sm">Category</span>
-                <p className="text-white font-medium">{selectedTransaction.category}</p>
+                <span className={clsx('text-gray-500', 'text-sm')}>Category</span>
+                <p className={clsx('text-white', 'font-medium')}>{selectedTransaction.category}</p>
               </div>
               <div>
-                <span className="text-gray-500 text-sm">Description</span>
+                <span className={clsx('text-gray-500', 'text-sm')}>Description</span>
                 <p className="text-white">{selectedTransaction.description}</p>
               </div>
-              <div className="flex justify-between items-center pt-2 border-t border-white/10">
+              <div className={clsx('flex', 'justify-between', 'items-center', 'pt-2', 'border-t', 'border-white/10')}>
                 <div>
-                  <span className="text-gray-500 text-sm">Date & Time</span>
+                  <span className={clsx('text-gray-500', 'text-sm')}>Date & Time</span>
                   <p className="text-white">{selectedTransaction.date} at {selectedTransaction.time}</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-gray-500 text-sm">Amount</span>
-                  <p className="text-green-400 font-bold text-xl">
+                  <span className={clsx('text-gray-500', 'text-sm')}>Amount</span>
+                  <p className={clsx('text-green-400', 'font-bold', 'text-xl')}>
                     {selectedTransaction.currency}{selectedTransaction.amount}
                   </p>
                 </div>
