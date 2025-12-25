@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, ReactElement } from 'react';
+import React, { useState } from 'react';
 import { 
   LuCode, 
   LuKey, 
@@ -9,7 +9,7 @@ import {
   LuCheck,
   LuEye,
   LuEyeOff,
-  LuRefreshCw,
+//   LuRefreshCw,
   LuTrash2,
   LuPlus,
   LuActivity,
@@ -149,7 +149,7 @@ const apiEndpoints: Record<string, ApiEndpoint[]> = {
 
 // API Keys View
 const ApiKeysView = () => {
-  const [keys, setKeys] = useState(mockApiKeys);
+  const [keys] = useState(mockApiKeys);
   const [showKey, setShowKey] = useState<string | null>(null);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -327,7 +327,7 @@ const DocumentationView = () => {
 
       <div className="bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4">
         <div className="flex items-start gap-3">
-          <LuShield className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+          <LuShield className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
           <div>
             <h3 className="text-blue-400 font-semibold mb-1">Base URL</h3>
             <code className="text-white">https://api.neondashboard.com/v1</code>
