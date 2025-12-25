@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fa6';
 import { FaTimes } from 'react-icons/fa';
 import { IconType } from 'react-icons';
+import Link from 'next/link';
 
 // Type Definitions
 interface PersonalDetails {
@@ -45,6 +46,7 @@ interface Shortcut {
   label: string;
   description: string;
   color: string;
+  url: string;
 }
 
 interface UserData {
@@ -113,42 +115,48 @@ const userData: UserData = {
       icon: FaPhone, 
       label: "Virtual Number", 
       description: "Make/receive calls & messages",
-      color: "bg-blue-500/20 hover:bg-blue-500/30"
+      color: "bg-blue-500/20 hover:bg-blue-500/30",
+      url: '/dashboard/virtual_number'
     },
     { 
       id: 2, 
       icon: FaFileInvoiceDollar, 
       label: "Bills", 
       description: "Pay utility bills",
-      color: "bg-purple-500/20 hover:bg-purple-500/30"
+      color: "bg-purple-500/20 hover:bg-purple-500/30",
+      url: '/dashboard/neonpay#bills'
     },
     { 
       id: 3, 
       icon: FaWallet, 
       label: "Airtime/Data", 
       description: "Buy airtime & data",
-      color: "bg-green-500/20 hover:bg-green-500/30"
+      color: "bg-green-500/20 hover:bg-green-500/30",
+      url: '/dashboard/neonpay#vtu'
     },
     { 
       id: 4, 
       icon: FaUsers, 
       label: "Neon Access", 
       description: "Manage social profiles",
-      color: "bg-pink-500/20 hover:bg-pink-500/30"
+      color: "bg-pink-500/20 hover:bg-pink-500/30",
+      url: '/dashboard/neonaccess'
     },
     { 
       id: 5, 
       icon: FaCode, 
       label: "API", 
       description: "Developer access",
-      color: "bg-orange-500/20 hover:bg-orange-500/30"
+      color: "bg-orange-500/20 hover:bg-orange-500/30",
+      url: '/dashboard/api'
     },
     { 
       id: 6, 
       icon: FaWallet, 
       label: "NeonPay", 
       description: "Developer access",
-      color: "bg-orange-500/20 hover:bg-orange-500/30"
+      color: "bg-orange-500/20 hover:bg-orange-500/30",
+      url: '/dashboard/neonpay#wallet'
     }
   ]
 };
@@ -313,7 +321,8 @@ export const UserContent: React.FC = () => {
           {userData.shortcuts.map((shortcut: Shortcut) => {
             const Icon = shortcut.icon;
             return (
-              <button
+              <Link
+              href={shortcut.url}
                 key={shortcut.id}
                 className={clsx(
                   'flex flex-col items-center justify-center gap-2',
@@ -327,7 +336,7 @@ export const UserContent: React.FC = () => {
                   <div className={clsx('text-[12px]', 'font-semibold', 'text-white')}>{shortcut.label}</div>
                   <div className={clsx('text-[10px]', 'text-gray-400', 'mt-1')}>{shortcut.description}</div>
                 </div>
-              </button>
+              </Link>
             );
           })}
         </div>

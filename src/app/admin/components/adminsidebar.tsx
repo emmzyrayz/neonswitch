@@ -26,8 +26,8 @@ export default function AdminSidebar() {
         onClick={toggleSidebar}
         className={clsx(
           "fixed",
-          "top-4",
-          "left-4",
+          "top-[70px]",
+          isOpen ? "md:right-[200px] right-[150px]" : "right-4",
           "z-50",
           "md:hidden",
           "p-3",
@@ -37,7 +37,7 @@ export default function AdminSidebar() {
           "border-muted/30",
           "rounded-lg",
           "text-muted",
-          "transition"
+          "transition-all ease-in-out md:duration-700 duration-500"
         )}
         aria-label="Toggle menu"
       >
@@ -50,7 +50,7 @@ export default function AdminSidebar() {
           className={clsx(
             "fixed",
             "inset-0",
-            "bg-black/60",
+            "bg-black/30 backdrop-blur-xl",
             "z-40",
             "md:hidden"
           )}
@@ -61,7 +61,7 @@ export default function AdminSidebar() {
       {/* Sidebar */}
       <aside
         className={clsx(
-          "w-64",
+          "w-64 pt-[80px]",
           "bg-black/40",
           "backdrop-blur-sm",
           "border-r",
@@ -70,13 +70,13 @@ export default function AdminSidebar() {
           "p-6",
           "flex",
           "flex-col",
-          "transition-transform",
-          "duration-300",
+          "transition-all",
+          "duration-500",
           "z-40",
           // Mobile: Fixed positioned, slide from left, no space taken
           "fixed",
           "md:sticky",
-          "md:top-0",
+          "top-0",
           isOpen ? "translate-x-0" : "-translate-x-full",
           "md:translate-x-0"
         )}

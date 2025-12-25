@@ -625,7 +625,7 @@ const Navbar = () => {
                 </div>
 
                 <Link
-                  href="/dashboard/settings"
+                  href="/pricing"
                   className={clsx(
                     "flex items-center gap-3 px-4 py-2.5",
                     "hover:bg-gray-800 transition-colors text-gray-300 hover:text-white"
@@ -636,7 +636,7 @@ const Navbar = () => {
                 </Link>
 
                 <Link
-                  href="/dashboard/profile"
+                  href="/profile"
                   className={clsx(
                     "flex items-center gap-3 px-4 py-2.5",
                     "hover:bg-gray-800 transition-colors text-gray-300 hover:text-white"
@@ -647,7 +647,7 @@ const Navbar = () => {
                 </Link>
 
                 <Link
-                  href="/dashboard/settings"
+                  href="/profile/settings"
                   className={clsx(
                     "flex items-center gap-3 px-4 py-2.5",
                     "hover:bg-gray-800 transition-colors text-gray-300 hover:text-white"

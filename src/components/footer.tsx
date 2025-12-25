@@ -135,7 +135,7 @@ export default function Footer() {
         {/* Links */}
 
         {/* Dynamic Footer List */}
-        <div className={clsx('flex', 'flex-wrap', 'gap-5', 'w-full', 'items-center', 'justify-center')}>
+        <div className={clsx('flex', 'flex-wrap', 'gap-2', 'w-full', 'items-center', 'justify-evenly')}>
           {FooterLists.map((section, index) => (
             <div key={index} className="min-w-[30%]">
               <h3
@@ -148,7 +148,7 @@ export default function Footer() {
               >
                 {section.head}
               </h3>
-              <ul className={clsx("space-y-2", "text-[14px]", "md:text-[16px]")}>
+              <ul className={clsx("space-y-2 w-full flex-col items-center justify-center ", "text-[14px]", "md:text-[16px]")}>
                 {section.items.map((item, itemIndex) => {
                   const Icon = item.icon;
                   const isExternalLink = item.path.startsWith("http");
@@ -158,9 +158,9 @@ export default function Footer() {
                     <li
                       key={itemIndex}
                       className={clsx(
-                        "hover:text-black",
+                        "hover:text-black w-full ",
                         "font-bold",
-                        "transition",
+                        "transition-all ease-in-out duration-500",
                         "cursor-pointer"
                       )}
                     >

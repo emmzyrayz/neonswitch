@@ -16,9 +16,10 @@ export default function AdminLayout({
     <main
       className={clsx(
         "min-h-screen",
+        'min-w-screen',
         "bg-[#050507]",
         "text-white",
-        "flex",
+        "flex flex-row items-center justify-between",
         "relative"
       )}
     >
@@ -34,8 +35,7 @@ export default function AdminLayout({
           "lg:p-10",
           "overflow-y-auto",
           "pt-20", // Extra top padding on mobile for menu button
-          "md:pt-6",
-          "lg:pt-10"
+          "md:pt-[80px]"
         )}
       >
         {children}
