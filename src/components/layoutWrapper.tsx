@@ -78,7 +78,7 @@ const routeConfigs: Record<string, LayoutConfig> = {
     containerClass: 'bg-gray-50',
   },
   '/profile': {
-    showNavbar: true,
+    showNavbar: false,
     showFooter: false,
     showAds: false,
   },
