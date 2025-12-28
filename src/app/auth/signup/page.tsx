@@ -24,7 +24,7 @@ export default function Register() {
           <h2
             className={clsx(
               "text-3xl",
-              "text-neonPink",
+              "text-soft",
               "font-bold",
               "mb-6",
               "font-mono"
@@ -52,7 +52,7 @@ export default function Register() {
             Already have an account?{" "}
             <Link
               href="/auth/login"
-              className={clsx("text-muted", "underline")}
+              className={clsx("text-soft/60 hover:text-soft", "underline")}
             >
               Login
             </Link>
