@@ -10,7 +10,7 @@ export default function Login() {
   return (
     <div
       className={clsx(
-        "min-h-screen",
+        "min-h-screen w-screen",
         "flex",
         "items-center",
         "justify-center",

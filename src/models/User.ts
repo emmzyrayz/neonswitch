@@ -6,6 +6,7 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       unique: true,
+      index: true,
       lowercase: true,
       trim: true,
     },
@@ -30,6 +31,14 @@ const UserSchema = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+
+    verifyToken: String,
+  verifyTokenExpiry: Date,
+  verifyCode: String,
+
+  resetPasswordToken: String,
+  resetPasswordExpiry: Date,
+  resetPasswordCode: String,
   },
   { timestamps: true }
 );
