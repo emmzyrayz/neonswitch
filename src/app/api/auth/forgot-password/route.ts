@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { isValidEmail } from "@/lib/validator";
 import { generateToken, generateVerificationCode } from "@/lib/token";
+import { sendPasswordResetEmail } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {
@@ -13,10 +14,7 @@ export async function POST(req: Request) {
 
     // Validation
     if (!email) {
-      return NextResponse.json(
-        { error: "Email is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
     if (!isValidEmail(email)) {
@@ -30,18 +28,26 @@ export async function POST(req: Request) {
 
     // Find user
     const user = await User.findOne({ email });
-    
+
     if (!user) {
       // Don't reveal if user exists or not for security
       return NextResponse.json(
-        { message: "If your email is registered, you will receive a password reset link." },
+        {
+          message:
+            "If your email is registered, you will receive a password reset link.",
+        },
         { status: 200 }
       );
     }
 
+    // Clear previous reset attempts
+    user.resetPasswordToken = undefined;
+    user.resetPasswordCode = undefined;
+    user.resetPasswordExpiry = undefined;
+
     // Generate reset token and code
     const resetPasswordToken = generateToken();
-    const resetPasswordCode = generateVerificationCode(8); // 8 digits for extra security
+    const resetPasswordCode = generateVerificationCode(8);
     const resetPasswordExpiry = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
 
     // Update user
@@ -51,21 +57,22 @@ export async function POST(req: Request) {
     await user.save();
 
     // TODO: Send password reset email
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/reset-password?token=${resetPasswordToken}&email=${email}`;
-    
-    // TODO: await sendPasswordResetEmail(email, resetUrl, resetPasswordCode);
-    
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+    const resetUrl = `${baseUrl}/auth/reset-password?token=${resetPasswordToken}&email=${email}`;
+
+    try {
+      await sendPasswordResetEmail(email, resetUrl, resetPasswordCode);
+    } catch (mailError) {
+      console.error("PASSWORD RESET EMAIL FAILED:", mailError);
+    }
+
     console.log("📧 Password Reset URL:", resetUrl);
     console.log("🔢 Reset Code:", resetPasswordCode);
 
     return NextResponse.json(
       {
         message: "Password reset link sent. Please check your email.",
-        // REMOVE IN PRODUCTION
-        _dev: {
-          resetUrl,
-          resetCode: resetPasswordCode,
-        }
       },
       { status: 200 }
     );

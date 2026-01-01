@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { isValidEmail } from "@/lib/validator";
 import { generateToken, generateVerificationCode } from "@/lib/token";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {
@@ -13,10 +14,7 @@ export async function POST(req: Request) {
 
     // Validation
     if (!email) {
-      return NextResponse.json(
-        { error: "Email is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
     if (!isValidEmail(email)) {
@@ -30,11 +28,14 @@ export async function POST(req: Request) {
 
     // Find user
     const user = await User.findOne({ email });
-    
+
     if (!user) {
       // Don't reveal if user exists or not for security
       return NextResponse.json(
-        { message: "If your email is registered, you will receive a verification link." },
+        {
+          message:
+            "If your email is registered, you will receive a verification link.",
+        },
         { status: 200 }
       );
     }
@@ -42,8 +43,23 @@ export async function POST(req: Request) {
     // Check if already verified
     if (user.isEmailVerified) {
       return NextResponse.json(
-        { error: "Email is already verified" },
-        { status: 400 }
+        {
+          message:
+            "If your email is registered, you will receive a verification link.",
+        },
+        { status: 200 }
+      );
+    }
+
+    const now = Date.now();
+
+    if (
+      user.lastVerificationSentAt &&
+      now - user.lastVerificationSentAt.getTime() < 1000 * 60 * 2 // 2 minutes
+    ) {
+      return NextResponse.json(
+        { error: "Please wait before requesting another verification email." },
+        { status: 429 }
       );
     }
 
@@ -56,24 +72,26 @@ export async function POST(req: Request) {
     user.verifyToken = verifyToken;
     user.verifyCode = verifyCode;
     user.verifyTokenExpiry = verifyTokenExpiry;
+    user.lastVerificationSentAt = new Date();
     await user.save();
 
     // TODO: Send verification email
     const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/verify?token=${verifyToken}&email=${email}`;
-    
+
     // TODO: await sendVerificationEmail(email, verificationUrl, verifyCode);
-    
-    console.log("📧 New Verification URL:", verificationUrl);
-    console.log("🔢 New Verification Code:", verifyCode);
+
+    try {
+      await sendVerificationEmail(email, verificationUrl, verifyCode);
+    } catch (mailError) {
+      console.error("VERIFICATION EMAIL FAILED:", mailError);
+    }
+
+    // console.log("📧 New Verification URL:", verificationUrl);
+    // console.log("🔢 New Verification Code:", verifyCode);
 
     return NextResponse.json(
       {
         message: "Verification email sent. Please check your inbox.",
-        // REMOVE IN PRODUCTION
-        _dev: {
-          verificationUrl,
-          verificationCode: verifyCode,
-        }
       },
       { status: 200 }
     );

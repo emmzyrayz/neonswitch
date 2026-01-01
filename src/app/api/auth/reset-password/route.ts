@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
-import { hashPassword } from "@/lib/password";
+import { hashPassword, verifyPassword } from "@/lib/password";
 import { isValidPassword } from "@/lib/validator";
+import { sendPasswordChangedEmail } from "@/lib/mail";
 
 interface ResetPasswordQuery {
   email: string;
@@ -49,7 +50,7 @@ export async function POST(req: Request) {
 
     if (!user) {
       return NextResponse.json(
-        { error: "Invalid or expired reset token" },
+        { error: "Invalid or expired reset credentials" },
         { status: 400 }
       );
     }
@@ -62,6 +63,18 @@ export async function POST(req: Request) {
       );
     }
 
+    const isSamePassword = await verifyPassword(
+  newPassword,
+  user.passwordHash
+);
+
+if (isSamePassword) {
+  return NextResponse.json(
+    { error: "New password must be different from your old password" },
+    { status: 400 }
+  );
+}
+
     // Hash new password
     const passwordHash = await hashPassword(newPassword);
 
@@ -71,6 +84,13 @@ export async function POST(req: Request) {
     user.resetPasswordCode = undefined;
     user.resetPasswordExpiry = undefined;
     await user.save();
+
+    // Then notify user (best-effort)
+try {
+  await sendPasswordChangedEmail(user.email);
+} catch (mailError) {
+  console.error("PASSWORD CHANGED EMAIL FAILED:", mailError);
+}
 
     return NextResponse.json(
       {

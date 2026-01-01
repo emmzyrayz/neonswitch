@@ -5,6 +5,7 @@ import { hashPassword } from "@/lib/password";
 import { generateNeonId } from "@/lib/neonId";
 import { isValidEmail, isValidPassword } from "@/lib/validator";
 import { generateToken, generateVerificationCode } from "@/lib/token";
+import { sendVerificationEmail } from "@/lib/mail";
 
 interface MongoError extends Error {
   code?: number;
@@ -99,7 +100,7 @@ export async function POST(req: Request) {
 
     
     // TODO: Call email service here
-    // await sendVerificationEmail(email, verificationUrl, verifyToken);
+    await sendVerificationEmail(email, verificationUrl, verifyCode);
 
      // 9️⃣ Respond with _dev object for testing
     const response = {

@@ -39,6 +39,9 @@ const UserSchema = new Schema(
   resetPasswordToken: String,
   resetPasswordExpiry: Date,
   resetPasswordCode: String,
+
+  lastVerificationSentAt: Date,
+  tokenVersion: Number,
   },
   { timestamps: true }
 );

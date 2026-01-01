@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
+import { sendWelcomeEmail } from "@/lib/mail";
 
 interface VerifyQuery {
   email: string;
@@ -66,6 +67,13 @@ export async function POST(req: Request) {
     user.verifyCode = undefined;
     user.verifyTokenExpiry = undefined;
     await user.save();
+
+    // After verifying email
+    try {
+  await sendWelcomeEmail(user.email, user.neonId);
+} catch (mailError) {
+  console.error("WELCOME EMAIL FAILED:", mailError);
+}
 
     return NextResponse.json(
       {
@@ -134,6 +142,13 @@ export async function GET(req: Request) {
     user.verifyCode = undefined;
     user.verifyTokenExpiry = undefined;
     await user.save();
+
+    // After verifying email
+    try {
+  await sendWelcomeEmail(user.email, user.neonId);
+} catch (mailError) {
+  console.error("WELCOME EMAIL FAILED:", mailError);
+}
 
     // Redirect to success page or return JSON
     return NextResponse.json(

@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { verifyPassword, hashPassword } from "@/lib/password";
 import { isValidPassword } from "@/lib/validator";
+import { sendPasswordChangedEmail } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {
@@ -64,6 +65,15 @@ export async function POST(req: Request) {
     // Hash and save new password
     user.passwordHash = await hashPassword(newPassword);
     await user.save();
+
+    user.tokenVersion += 1;
+
+    // Notify user (non-blocking)
+try {
+  await sendPasswordChangedEmail(user.email);
+} catch (mailError) {
+  console.error("PASSWORD CHANGE EMAIL FAILED:", mailError);
+}
 
     return NextResponse.json(
       {
