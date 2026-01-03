@@ -1,27 +1,58 @@
+// app/api/auth/change-password/route.ts - UPDATED VERSION
 import { NextResponse } from "next/server";
 import { authenticateRequest } from "@/lib/AuthM";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
+import RefreshToken from "@/models/RefreshToken";
 import { verifyPassword, hashPassword } from "@/lib/password";
 import { isValidPassword } from "@/lib/validator";
 import { sendPasswordChangedEmail } from "@/lib/mail";
+import {
+  changePasswordRateLimit,
+  applyRateLimit,
+  getClientIp,
+} from "@/lib/upstashLimiter";
 
 export async function POST(req: Request) {
   try {
-    // Authenticate user
+    // ========== 1. AUTHENTICATE USER ==========
     const { error, user: authUser } = await authenticateRequest(req);
     
-    if (error) {
-      return error;
+    if (error || !authUser) {
+      return error || NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
     }
 
+    // ========== 2. RATE LIMITING ==========
+    const ip = getClientIp(req);
+    const rateLimitKey = `${ip}:${authUser.userId}`;
+    
+    const rateLimit = await applyRateLimit(
+      rateLimitKey,
+      changePasswordRateLimit,
+      "Too many password change attempts. Please try again later."
+    );
+
+    if (!rateLimit.blocked) {
+      return rateLimit.response;
+    }
+
+    // ========== 3. PARSE & VALIDATE INPUT ==========
     const body = await req.json();
     const { currentPassword, newPassword } = body;
 
-    // Validation
     if (!currentPassword || !newPassword) {
       return NextResponse.json(
         { error: "Current password and new password are required" },
+        { status: 400 }
+      );
+    }
+
+    if (typeof currentPassword !== 'string' || typeof newPassword !== 'string') {
+      return NextResponse.json(
+        { error: "Invalid password format" },
         { status: 400 }
       );
     }
@@ -41,10 +72,11 @@ export async function POST(req: Request) {
       );
     }
 
+    // ========== 4. CONNECT TO DATABASE ==========
     await connectDB();
 
-    // Get user with password
-    const user = await User.findById(authUser!.userId);
+    // ========== 5. GET USER WITH PASSWORD ==========
+    const user = await User.findById(authUser.userId).select("+passwordHash");
     
     if (!user) {
       return NextResponse.json(
@@ -53,7 +85,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Verify current password
+    // ========== 6. VERIFY CURRENT PASSWORD ==========
     const isValid = await verifyPassword(currentPassword, user.passwordHash);
     if (!isValid) {
       return NextResponse.json(
@@ -62,29 +94,52 @@ export async function POST(req: Request) {
       );
     }
 
-    // Hash and save new password
+    // ========== 7. HASH AND SAVE NEW PASSWORD ==========
     user.passwordHash = await hashPassword(newPassword);
+    user.tokenVersion = (user.tokenVersion || 0) + 1;
     await user.save();
 
-    user.tokenVersion += 1;
+    // ========== 8. REVOKE ALL REFRESH TOKENS ==========
+    // Force re-login on all devices for security
+    try {
+      await RefreshToken.updateMany(
+        { userId: user._id, revokedAt: null },
+        { 
+          $set: { 
+            revokedAt: new Date(), 
+            revokedByIp: ip,
+            replacedByToken: 'password_changed'
+          } 
+        }
+      );
+      console.log("✅ All refresh tokens revoked after password change");
+    } catch (tokenError) {
+      console.error("Failed to revoke refresh tokens:", tokenError);
+      // Continue - password was changed successfully
+    }
 
-    // Notify user (non-blocking)
-try {
-  await sendPasswordChangedEmail(user.email);
-} catch (mailError) {
-  console.error("PASSWORD CHANGE EMAIL FAILED:", mailError);
-}
+    // ========== 9. SEND PASSWORD CHANGED EMAIL ==========
+    try {
+      await sendPasswordChangedEmail(user.email);
+      console.log("✅ Password changed notification sent to:", user.email);
+    } catch (mailError) {
+      console.error("Failed to send password change email:", mailError);
+      // Continue - password was changed successfully
+    }
 
+    // ========== 10. RETURN SUCCESS RESPONSE ==========
     return NextResponse.json(
       {
-        message: "Password changed successfully",
+        message: "Password changed successfully. Please login again on all devices.",
+        tokenInvalidated: true,
       },
       { status: 200 }
     );
+
   } catch (error) {
     console.error("CHANGE PASSWORD ERROR:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "An error occurred while changing your password. Please try again." },
       { status: 500 }
     );
   }

@@ -1,22 +1,46 @@
+// app/api/auth/forgot-password/route.ts - UPDATED VERSION
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
-import { isValidEmail } from "@/lib/validator";
+import { isValidEmail, sanitizeEmail } from "@/lib/validator";
 import { generateToken, generateVerificationCode } from "@/lib/token";
 import { sendPasswordResetEmail } from "@/lib/mail";
+import {
+  forgotPasswordRateLimit,
+  applyRateLimit,
+  getClientIp,
+} from "@/lib/upstashLimiter";
 
 export async function POST(req: Request) {
   try {
+    // ========== 1. PARSE & VALIDATE INPUT ==========
     const body = await req.json();
     const { email: rawEmail } = body;
 
-    const email = rawEmail?.toLowerCase().trim();
-
-    // Validation
-    if (!email) {
-      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+    if (!rawEmail) {
+      return NextResponse.json(
+        { error: "Email is required" },
+        { status: 400 }
+      );
     }
 
+    // Sanitize email using validator function
+    const email = sanitizeEmail(rawEmail);
+    const ip = getClientIp(req);
+
+    // ========== 2. RATE LIMITING ==========
+    const rateLimitKey = `${ip}:${email}`;
+    const rateLimit = await applyRateLimit(
+      rateLimitKey,
+      forgotPasswordRateLimit,
+      "Too many password reset requests. Please try again later."
+    );
+
+    if (!rateLimit.blocked) {
+      return rateLimit.response;
+    }
+
+    // ========== 3. VALIDATE EMAIL ==========
     if (!isValidEmail(email)) {
       return NextResponse.json(
         { error: "Invalid email format" },
@@ -24,62 +48,67 @@ export async function POST(req: Request) {
       );
     }
 
+    // ========== 4. CONNECT TO DATABASE ==========
     await connectDB();
 
-    // Find user
-    const user = await User.findOne({ email });
+    // ========== 5. FIND USER ==========
+    const user = await User.findOne({ email }).select(
+      "+resetPasswordToken +resetPasswordCode"
+    );
 
     if (!user) {
       // Don't reveal if user exists or not for security
       return NextResponse.json(
         {
-          message:
-            "If your email is registered, you will receive a password reset link.",
+          message: "If your email is registered, you will receive a password reset link.",
         },
         { status: 200 }
       );
     }
 
-    // Clear previous reset attempts
-    user.resetPasswordToken = undefined;
-    user.resetPasswordCode = undefined;
-    user.resetPasswordExpiry = undefined;
-
-    // Generate reset token and code
+    // ========== 6. GENERATE RESET TOKEN & CODE ==========
     const resetPasswordToken = generateToken();
     const resetPasswordCode = generateVerificationCode(8);
-    const resetPasswordExpiry = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
+    const resetPasswordExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
-    // Update user
+    // ========== 7. UPDATE USER WITH RESET INFO ==========
     user.resetPasswordToken = resetPasswordToken;
     user.resetPasswordCode = resetPasswordCode;
     user.resetPasswordExpiry = resetPasswordExpiry;
     await user.save();
 
-    // TODO: Send password reset email
+    // ========== 8. BUILD RESET URL ==========
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const resetUrl = `${baseUrl}/auth/reset-password?token=${resetPasswordToken}&email=${encodeURIComponent(email)}`;
 
-    const resetUrl = `${baseUrl}/auth/reset-password?token=${resetPasswordToken}&email=${email}`;
-
+    // ========== 9. SEND PASSWORD RESET EMAIL ==========
     try {
       await sendPasswordResetEmail(email, resetUrl, resetPasswordCode);
+      console.log("✅ Password reset email sent to:", email);
     } catch (mailError) {
-      console.error("PASSWORD RESET EMAIL FAILED:", mailError);
+      console.error("Failed to send password reset email:", mailError);
+      // Continue - don't fail the request if email fails
     }
 
-    console.log("📧 Password Reset URL:", resetUrl);
-    console.log("🔢 Reset Code:", resetPasswordCode);
+    // ========== 10. LOG FOR DEVELOPMENT ==========
+    if (process.env.NODE_ENV === 'development') {
+      console.log("📧 [DEV] Password Reset URL:", resetUrl);
+      console.log("🔢 [DEV] Reset Code:", resetPasswordCode);
+      console.log("🔑 [DEV] Reset Token:", resetPasswordToken);
+    }
 
+    // ========== 11. RETURN SUCCESS RESPONSE ==========
     return NextResponse.json(
       {
-        message: "Password reset link sent. Please check your email.",
+        message: "If your email is registered, you will receive a password reset link.",
       },
       { status: 200 }
     );
+
   } catch (error) {
     console.error("FORGOT PASSWORD ERROR:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "An error occurred while processing your request. Please try again." },
       { status: 500 }
     );
   }

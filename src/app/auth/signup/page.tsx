@@ -51,7 +51,7 @@ export default function Register() {
           <p className={clsx("text-white", "mt-4", "text-sm")}>
             Already have an account?{" "}
             <Link
-              href="/auth/login"
+              href="/auth/signin"
               className={clsx("text-soft/60 hover:text-soft", "underline")}
             >
               Login

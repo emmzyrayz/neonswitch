@@ -9,6 +9,7 @@ export interface AuthenticatedRequest extends Request {
     email: string;
     neonId: string;
     role: string;
+  isEmailVerified: boolean;
   };
 }
 
@@ -49,8 +50,7 @@ export async function authenticateRequest(req: Request) {
     if (!user) {
       return {
         error: NextResponse.json(
-          { error: "User not found" },
-          { status: 404 }
+         { error: "Authentication failed" }, { status: 401 }
         ),
         user: null,
       };
