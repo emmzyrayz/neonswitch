@@ -9,7 +9,7 @@ export default function ForgotPassword() {
   return (
     <div
       className={clsx(
-        "min-h-screen",
+        "min-h-screen w-screen",
         "flex",
         "items-center",
         "justify-center",
@@ -18,7 +18,7 @@ export default function ForgotPassword() {
       )}
     >
       <ParticleBackground />
-      <div className={clsx("relative", "z-10")}>
+      <div className={clsx("relative w-full flex items-center justify-center md:p-4 p-2", "z-10")}>
         <AuthCard>
           <h2
             className={clsx(
@@ -31,7 +31,7 @@ export default function ForgotPassword() {
           >
             Forgot Password
           </h2>
-          <p className={clsx("text-white", "mb-4", "text-sm")}>
+          <p className={clsx("text-soft font-medium", "mb-4", "text-sm")}>
             Enter your email or phone to reset your password
           </p>
           <form className={clsx("flex", "flex-col")}>

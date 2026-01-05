@@ -9,7 +9,7 @@ import LayoutWrapper from "@/components/layoutWrapper";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import Ads from "@/components/Ads";
-import { NotFoundProvider } from "@/context/NotFoundContext";
+import { ProvidersWrapper } from "./providers";
 import clsx from "clsx";
 
 const geistSans = localFont({
@@ -58,7 +58,7 @@ export default function RootLayout({
     const timer = setTimeout(() => {
       setIsLoading(false);
       setShowContent(true);
-    }, 3000);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -86,12 +86,12 @@ export default function RootLayout({
         "justify-center",
         ''
       )}>
-      <NotFoundProvider>
+      <ProvidersWrapper>
           <LoadingScreen
             isLoading={isLoading}
             onLoadingComplete={() => setShowContent(true)}
           />
-          
+
           {showContent && (
             <LayoutWrapper
               navbar={<Navbar />}
@@ -101,7 +101,7 @@ export default function RootLayout({
               {children}
             </LayoutWrapper>
           )}
-        </NotFoundProvider>
+        </ProvidersWrapper>
       </body>
     </html>
   );

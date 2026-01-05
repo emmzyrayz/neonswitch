@@ -10,7 +10,7 @@ export default function Login() {
   return (
     <div
       className={clsx(
-        "min-h-screen w-screen",
+        "min-h-screen w-screen md:mt-0 mt-5",
         "flex",
         "items-center",
         "justify-center",
@@ -19,11 +19,11 @@ export default function Login() {
       )}
     >
       <ParticleBackground />
-      <div className={clsx('relative', 'z-10')}>
+      <div className={clsx('relative w-full flex items-center justify-center md:p-4 p-2', 'z-10')}>
         <AuthCard>
           <h2
             className={clsx(
-              "text-3xl",
+              "md:text-3xl text-2xl",
               "text-soft",
               "font-bold",
               "mb-6",
