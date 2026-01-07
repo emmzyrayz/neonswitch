@@ -54,7 +54,7 @@ export interface IUser {
   verifyCode?: string;
 
   // Phone verification
-  phoneVerifyCode?: string;
+  phonePinId?: string; // Termii's PIN ID for verification
   phoneVerifyCodeExpiry?: Date;
 
   // Password reset tokens
@@ -65,7 +65,7 @@ export interface IUser {
   // Security & tracking
   lastVerificationSentAt?: Date;
   lastPhoneVerificationSentAt?: Date;
-  
+
   // ===== Meta =====
   neonId: string;
   tokenVersion?: number;
@@ -108,7 +108,7 @@ const UserSchema = new Schema<IUser, IUserModel>(
       default: false,
     },
 
-     isPhoneVerified: {
+    isPhoneVerified: {
       type: Boolean,
       default: false,
     },
@@ -136,7 +136,7 @@ const UserSchema = new Schema<IUser, IUserModel>(
       },
     },
 
-     address: {
+    address: {
       country: { type: String, trim: true },
       state: { type: String, trim: true },
       city: { type: String, trim: true },
@@ -181,9 +181,9 @@ const UserSchema = new Schema<IUser, IUserModel>(
     },
 
     // ===== Phone Verification =====
-    phoneVerifyCode: {
+    phonePinId: {
       type: String,
-      select: false,
+      select: false, // Don't include in queries by default
     },
     phoneVerifyCodeExpiry: {
       type: Date,
@@ -214,10 +214,10 @@ const UserSchema = new Schema<IUser, IUserModel>(
       default: 0,
     },
   },
-  { 
+  {
     timestamps: true,
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
   }
 );
 

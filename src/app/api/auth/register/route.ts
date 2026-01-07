@@ -7,7 +7,7 @@ import { generateNeonId } from "@/lib/neonId";
 import { isValidEmail, isValidPassword, sanitizeEmail } from "@/lib/validator";
 import { generateToken, generateVerificationCode } from "@/lib/token";
 import { sendVerificationEmail } from "@/lib/mail";
-import { sendSms, generateSMSVerificationCode, smsTemplates } from "@/lib/sms";
+import { sendOtp, smsTemplates } from "@/lib/sms";
 import {
   registerRateLimit,
   applyRateLimit,
@@ -31,11 +31,12 @@ interface RegistrationResponse {
     isPhoneVerified: boolean;
     nationality: string;
   };
+  phonePinId?: string;
   _dev?: {
     verificationUrl: string;
     verificationToken: string;
     verificationCode: string;
-    phoneVerificationCode: string;
+    phonePinId?: string;
     note: string;
   };
 }
@@ -133,7 +134,7 @@ export async function POST(req: Request) {
     const phone = phoneResult.formatted!; // E.164 format
 
     // If nationality was provided, validate it's a supported country
-     const callingCode = getCountryCallingCode(nationality);
+    const callingCode = getCountryCallingCode(nationality);
     if (!callingCode) {
       return NextResponse.json(
         {
@@ -185,10 +186,26 @@ export async function POST(req: Request) {
     const verifyCode = generateVerificationCode(6);
     const verifyTokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-    // ========== 12. GENERATE PHONE VERIFICATION CODE ==========
-    const phoneVerifyCode = generateSMSVerificationCode(6);
-    const phoneVerifyCodeExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    // ========== 10. SEND PHONE OTP VIA TERMII ==========
+    const appName = process.env.NEXT_PUBLIC_APP_NAME || "YourApp";
+    const phoneMessage = smsTemplates.phoneVerification(appName, 6);
 
+    let phonePinId: string | undefined;
+
+    try {
+      const smsResult = await sendOtp(phone, 6, phoneMessage);
+
+      if (smsResult.success && smsResult.pinId) {
+        phonePinId = smsResult.pinId;
+        console.log("✅ Phone OTP sent via Termii:", phone);
+      } else {
+        console.error("Failed to send phone OTP:", smsResult.error);
+        // Don't fail registration - user can resend later
+      }
+    } catch (smsError) {
+      console.error("SMS service error:", smsError);
+      // Don't fail registration
+    }
 
     // ========== 9. CREATE USER ==========
     const userData: Partial<IUser> = {
@@ -199,8 +216,8 @@ export async function POST(req: Request) {
       verifyToken,
       verifyCode,
       verifyTokenExpiry,
-      phoneVerifyCode,
-      phoneVerifyCodeExpiry,
+      phonePinId,
+      phoneVerifyCodeExpiry: new Date(Date.now() + 10 * 60 * 1000),
       lastVerificationSentAt: new Date(),
       lastPhoneVerificationSentAt: new Date(),
       role: "user",
@@ -211,19 +228,20 @@ export async function POST(req: Request) {
       profile: {
         dateOfBirth: new Date(dateOfBirth),
         nationality: nationality.toUpperCase(),
-        gender: gender as 'male' | 'female' | 'other',
+        gender: gender as "male" | "female" | "other",
         ...(firstName && { firstName }),
         ...(lastName && { lastName }),
       },
     };
 
-     // ========== 14. CREATE USER ==========
+    // ========== 14. CREATE USER ==========
     const user = await User.create(userData);
-
 
     // ========== 10. BUILD VERIFICATION URL ==========
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const verificationUrl = `${baseUrl}/auth/verify?token=${verifyToken}&email=${encodeURIComponent(email)}`;
+    const verificationUrl = `${baseUrl}/auth/verify?token=${verifyToken}&email=${encodeURIComponent(
+      email
+    )}`;
 
     // ========== 11. SEND VERIFICATION EMAIL ==========
     try {
@@ -233,31 +251,12 @@ export async function POST(req: Request) {
       console.error("Failed to send verification email:", emailError);
     }
 
-    // ========== 17. SEND PHONE VERIFICATION SMS ==========
-    try {
-      const appName = process.env.NEXT_PUBLIC_APP_NAME || "YourApp";
-      const smsMessage = smsTemplates.phoneVerification(
-        phoneVerifyCode,
-        appName
-      );
-      const smsResult = await sendSms(phone, smsMessage);
-
-      if (smsResult.success) {
-        console.log("✅ Verification SMS sent to:", phone);
-      } else {
-        console.error("Failed to send SMS:", smsResult.error);
-        // Don't fail registration if SMS fails - user can resend later
-      }
-    } catch (smsError) {
-      console.error("SMS service error:", smsError);
-      // Don't fail registration if SMS fails
-    }
-
     // ========== 12. PREPARE RESPONSE ==========
-    const isDevelopment = process.env.NODE_ENV === 'development';
-    
+    const isDevelopment = process.env.NODE_ENV === "development";
+
     const response: RegistrationResponse = {
-      message: "Registration successful. Please check your email and phone to verify your account.",
+      message:
+        "Registration successful. Please check your email and phone to verify your account.",
       user: {
         id: user._id.toString(),
         neonId: user.neonId,
@@ -267,6 +266,7 @@ export async function POST(req: Request) {
         isPhoneVerified: user.isPhoneVerified,
         nationality: user.profile.nationality,
       },
+      phonePinId,
     };
 
     // Only include dev info in development mode
@@ -275,19 +275,18 @@ export async function POST(req: Request) {
         verificationUrl,
         verificationToken: verifyToken,
         verificationCode: verifyCode,
-        phoneVerificationCode: phoneVerifyCode,
+        phonePinId: phonePinId || "not-generated",
         note: "This _dev object is only visible in development mode",
       };
-      
+
       console.log("📧 [DEV] Verification URL:", verificationUrl);
       console.log("🔑 [DEV] Verification Token:", verifyToken);
       console.log("🔢 [DEV] Verification Code:", verifyCode);
-    console.log("📱 [DEV] Phone Verification Code:", phoneVerifyCode);
+      console.log("📱 [DEV] Phone Verification Code:", phonePinId);
       console.log("🌍 [DEV] Phone formatted as:", phone);
     }
 
     return NextResponse.json(response, { status: 201 });
-
   } catch (error) {
     console.error("REGISTER ERROR:", error);
 

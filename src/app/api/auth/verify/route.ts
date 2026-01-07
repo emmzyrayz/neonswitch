@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { sendWelcomeEmail } from "@/lib/mail";
+import { verifyOtp } from "@/lib/sms";
 import {
   applyRateLimit,
   getClientIp,
@@ -18,11 +19,6 @@ interface VerifyEmailQuery {
   verifyToken?: string;
 }
 
-interface VerifyPhoneQuery {
-  email: string;
-  phoneVerifyCode: string;
-}
-
 /**
  * POST /api/auth/verify
  * Verifies email or phone using token/code
@@ -31,7 +27,7 @@ export async function POST(req: Request) {
   try {
     // ========== 1. PARSE & VALIDATE INPUT ==========
     const body = await req.json();
-    const { email: rawEmail, token, code, type = "email" } = body;
+    const { email: rawEmail, token, code, type = "email", pinId } = body;
 
     if (!rawEmail || (!token && !code)) {
       return NextResponse.json(
@@ -151,7 +147,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // ========== 5. HANDLE PHONE VERIFICATION ==========
+    // ========== PHONE VERIFICATION (WITH TERMII) ==========
     if (verificationType === "phone") {
       if (!code) {
         return NextResponse.json(
@@ -160,22 +156,26 @@ export async function POST(req: Request) {
         );
       }
 
-      const query: VerifyPhoneQuery = {
-        email,
-        phoneVerifyCode: code.toUpperCase().trim(),
-      };
-
-      // Find user
-      const user = await User.findOne(query).select("+phoneVerifyCode");
-
-      if (!user) {
+      if (!pinId) {
         return NextResponse.json(
-          { error: "Invalid or expired verification code" },
+          { error: "Pin ID is required for phone verification" },
           { status: 400 }
         );
       }
 
-      // Check if already verified
+      // Find user by email and pinId
+      const user = await User.findOne({
+        email,
+        phonePinId: pinId,
+      }).select("+phonePinId");
+
+      if (!user) {
+        return NextResponse.json(
+          { error: "Invalid verification session" },
+          { status: 400 }
+        );
+      }
+
       if (user.isPhoneVerified) {
         return NextResponse.json(
           { message: "Phone number is already verified." },
@@ -183,10 +183,12 @@ export async function POST(req: Request) {
         );
       }
 
-      // Check if code is expired
-      if (user.phoneVerifyCodeExpiry && new Date() > user.phoneVerifyCodeExpiry) {
-        // Clear expired code
-        user.phoneVerifyCode = undefined;
+      // Check expiry
+      if (
+        user.phoneVerifyCodeExpiry &&
+        new Date() > user.phoneVerifyCodeExpiry
+      ) {
+        user.phonePinId = undefined;
         user.phoneVerifyCodeExpiry = undefined;
         await user.save();
 
@@ -196,9 +198,19 @@ export async function POST(req: Request) {
         );
       }
 
-      // Update user - mark phone as verified
+      // Verify with Termii
+      const verifyResult = await verifyOtp(pinId, code.trim());
+
+      if (!verifyResult.success || !verifyResult.verified) {
+        return NextResponse.json(
+          { error: "Invalid verification code. Please check and try again." },
+          { status: 400 }
+        );
+      }
+
+      // Update user
       user.isPhoneVerified = true;
-      user.phoneVerifyCode = undefined;
+      user.phonePinId = undefined;
       user.phoneVerifyCodeExpiry = undefined;
       await user.save();
 
@@ -218,6 +230,7 @@ export async function POST(req: Request) {
         { status: 200 }
       );
     }
+
 
     // Should never reach here
     return NextResponse.json(

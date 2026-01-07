@@ -233,6 +233,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           body: JSON.stringify(data),
         });
 
+        // Store phonePinId in sessionStorage for phone verification
+      if (response.phonePinId) {
+        sessionStorage.setItem('phonePinId', response.phonePinId);
+      }
+
+
         router.push(
           "/auth/verify?email=" + encodeURIComponent(data.email)
         );
@@ -313,10 +319,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setError(null);
 
       try {
+        // Get pinId from sessionStorage
+        const pinId = sessionStorage.getItem("phonePinId");
+
+        if (!pinId) {
+          throw new Error(
+            "Phone verification session expired. Please request a new code."
+          );
+        }
+
         await apiCall("/verify", {
           method: "POST",
-          body: JSON.stringify({ email, code, type: "phone" }),
+          body: JSON.stringify({ email, code, type: "phone", pinId }),
         });
+
+        // Clear pinId after successful verification
+        sessionStorage.removeItem("phonePinId");
 
         // Refresh user data to reflect phone verification
         await checkAuth();
@@ -338,10 +356,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setError(null);
 
       try {
-        await apiCall("/resend-verification", {
+        const response = await apiCall("/resend-verification", {
           method: "POST",
           body: JSON.stringify({ email, type }),
         });
+
+        // If phone verification, store new phonePinId
+        if (type === "phone" && response.phonePinId) {
+          sessionStorage.setItem("phonePinId", response.phonePinId);
+        }
+
+        return response;
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Failed to resend verification";

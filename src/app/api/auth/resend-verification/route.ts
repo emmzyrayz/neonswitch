@@ -5,7 +5,7 @@ import User from "@/models/User";
 import { isValidEmail, sanitizeEmail } from "@/lib/validator";
 import { generateToken, generateVerificationCode } from "@/lib/token";
 import { sendVerificationEmail } from "@/lib/mail";
-import { sendSms, generateSMSVerificationCode, smsTemplates } from "@/lib/sms";
+import { sendOtp, smsTemplates } from "@/lib/sms";
 import {
   resendVerificationRateLimit,
   applyRateLimit,
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
     // ========== 5. FIND USER ==========
     const selectFields = verificationType === "email" 
       ? "+verifyToken +verifyCode"
-      : "+phoneVerifyCode";
+      : "+phonePinId";
     
     const user = await User.findOne({ email }).select(selectFields);
 
@@ -174,42 +174,59 @@ export async function POST(req: Request) {
       }
 
       // Generate new phone verification code
-      const phoneVerifyCode = generateSMSVerificationCode(6);
-      const phoneVerifyCodeExpiry = new Date(Date.now() + PHONE_CODE_EXPIRY_MINUTES * 60 * 1000);
-
-      // Update user
-      user.phoneVerifyCode = phoneVerifyCode;
-      user.phoneVerifyCodeExpiry = phoneVerifyCodeExpiry;
-      user.lastPhoneVerificationSentAt = new Date();
-      await user.save();
+      const appName = process.env.NEXT_PUBLIC_APP_NAME || "YourApp";
+      const phoneMessage = smsTemplates.phoneVerification(appName, 6);
 
       // Send SMS
-      try {
-        const appName = process.env.NEXT_PUBLIC_APP_NAME || "YourApp";
-        const smsMessage = smsTemplates.phoneVerification(phoneVerifyCode, appName);
-        const smsResult = await sendSms(user.phone, smsMessage);
+       try {
+         const smsResult = await sendOtp(user.phone, 6, phoneMessage);
 
-        if (smsResult.success) {
-          console.log("✅ Verification SMS resent to:", user.phone);
-        } else {
-          console.error("Failed to send SMS:", smsResult.error);
-        }
-      } catch (smsError) {
-        console.error("SMS service error:", smsError);
-        // Continue - user can try again later
-      }
+         if (smsResult.success && smsResult.pinId) {
+           // Update user with new pinId from Termii
+           user.phonePinId = smsResult.pinId;
+           user.phoneVerifyCodeExpiry = new Date(
+             Date.now() + PHONE_CODE_EXPIRY_MINUTES * 60 * 1000
+           );
+           user.lastPhoneVerificationSentAt = new Date();
+           await user.save();
 
-      // Development logging
-      if (process.env.NODE_ENV === 'development') {
-        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        console.log("📱 [DEV] Phone Verification Details");
-        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        console.log("👤 Email:", email);
-        console.log("📞 Phone:", user.phone);
-        console.log("🔢 Code:", phoneVerifyCode);
-        console.log(`⏰ Expires in: ${PHONE_CODE_EXPIRY_MINUTES} minute(s)`);
-        console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      }
+           console.log("✅ Phone OTP resent via Termii to:", user.phone);
+
+           if (process.env.NODE_ENV === "development") {
+             console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+             console.log("📱 [DEV] Phone Verification Details");
+             console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+             console.log("👤 Email:", email);
+             console.log("📞 Phone:", user.phone);
+             console.log("🔑 Pin ID:", smsResult.pinId);
+             console.log(
+               `⏰ Expires in: ${PHONE_CODE_EXPIRY_MINUTES} minute(s)`
+             );
+             console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+           }
+
+           return NextResponse.json(
+             {
+               message: "SMS verification sent. Please check your phone.",
+               type: verificationType,
+               phonePinId: smsResult.pinId, // Return new pinId to frontend
+             },
+             { status: 200 }
+           );
+         } else {
+           console.error("Failed to send phone OTP:", smsResult.error);
+           return NextResponse.json(
+             { error: "Failed to send SMS. Please try again later." },
+             { status: 500 }
+           );
+         }
+       } catch (smsError) {
+         console.error("SMS service error:", smsError);
+         return NextResponse.json(
+           { error: "SMS service unavailable. Please try again later." },
+           { status: 500 }
+         );
+       }
     }
 
     // ========== 10. RETURN SUCCESS RESPONSE ==========
