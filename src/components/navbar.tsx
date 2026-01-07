@@ -35,6 +35,7 @@ const NavLinks: NavLinkProps[] = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const pathname = usePathname();
 
   const isActive = ( path: string ) => {
@@ -43,6 +44,22 @@ export default function Navbar() {
     }
 
     return pathname?.startsWith(`/${path}/`);
+  }
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setOpen(false);
+      setIsClosing(false);
+    }, 700); // Match your animation duration
+  }
+
+  const handleToggle = () => {
+    if (open) {
+      handleClose();
+    } else {
+      setOpen(true);
+    }
   }
 
   return (
@@ -132,7 +149,7 @@ export default function Navbar() {
 
         {/* CTA */}
         <Link
-          href="/signin"
+          href="/auth/signin"
           className={clsx(
              "hidden",
             "md:block",
@@ -165,19 +182,19 @@ export default function Navbar() {
             "transition-transform",
             "duration-300",
             {
-              "rotate-90": open, // Rotate icon when open
+              "rotate-90": open || isClosing, // Rotate icon when open
             }
           )}
-          onClick={() => setOpen(!open)}
+          onClick={handleToggle}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
         >
-          {open ? "✕" : "☰"}
+          {open || isClosing ? "✕" : "☰"}
         </button>
       </div>
 
       {/* Mobile Menu */}
-      {open && (
+      {(open || isClosing) && (
         <div
           className={clsx(
           "md:hidden",
@@ -190,10 +207,10 @@ export default function Navbar() {
           "duration-500",
           "ease-in-out",
           "origin-top",
-          {
-            "max-h-0 opacity-0 -translate-y-4 scale-y-0": !open,
-            "max-h-[500px] opacity-100 translate-y-0 scale-y-100": open,
-          }
+          // {
+          //   "max-h-0 opacity-0 -translate-y-4 scale-y-0": !open,
+          //   "max-h-[500px] opacity-100 translate-y-0 scale-y-100": open,
+          // }
         )}
         >
           {NavLinks.map((item, index) => {
@@ -225,19 +242,21 @@ export default function Navbar() {
                   "font-semibold": active,
                   "border-primary": active,
                 },
-                open ? "animate-slideIn" : "animate-slideOut"
+                isClosing ? "animate-slideOut" : "animate-slideIn"
               )}
               style={{
-                animationDelay: open ? `${index * 50}ms` : `${index * 30}ms`,
-              }}
-                onClick={() => setOpen(false)}
+                  animationDelay: isClosing 
+                    ? `${index * 30}ms` 
+                    : `${index * 50}ms`,
+                }}
+                onClick={handleClose}
               >
                 {item.name}
               </Link>
             )
           })}
           <Link
-            href="/signin"
+            href="/auth/signin"
             className={clsx(
             "px-6",
             "py-2",
@@ -250,12 +269,14 @@ export default function Navbar() {
             "font-semibold",
             "transition-all",
             "duration-300",
-            open ? "animate-slideIn" : "animate-slideOut"
+            isClosing ? "animate-slideOut" : "animate-slideIn"
           )}
           style={{
-            animationDelay: open ? `${NavLinks.length * 50}ms` : `${NavLinks.length * 30}ms`,
-          }}
-            onClick={() => setOpen(false)}
+              animationDelay: isClosing 
+                ? `${NavLinks.length * 30}ms` 
+                : `${NavLinks.length * 50}ms`,
+            }}
+            onClick={handleClose}
           >
             Start Demo
           </Link>

@@ -11,6 +11,7 @@ interface AuthInputProps {
   required?: boolean;
   name?: string;
   error?: string;
+  disabled?: boolean;
 }
 
 const AuthInput: React.FC<AuthInputProps> = ({
@@ -23,7 +24,10 @@ const AuthInput: React.FC<AuthInputProps> = ({
   required = false,
   name,
   error,
+  disabled = false,
 }) => {
+  const disabledClasses = "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-neutral-800";
+
   // Render select if options are provided
   if (options && type === "select") {
     return (
@@ -35,6 +39,7 @@ const AuthInput: React.FC<AuthInputProps> = ({
           name={name}
           value={value}
           onChange={onChange}
+          disabled={disabled}
           className={clsx(
             'px-4',
             'py-2',
@@ -50,7 +55,8 @@ const AuthInput: React.FC<AuthInputProps> = ({
             'transition-all',
             'duration-500',
             'appearance-none',
-            'cursor-pointer'
+            'cursor-pointer',
+            disabledClasses
           )}
         >
           <option value="">Select {label}</option>
@@ -76,6 +82,7 @@ const AuthInput: React.FC<AuthInputProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        disabled={disabled}
         className={clsx(
           'md:px-4 px-2',
           'md:py-2 py-1',
@@ -89,7 +96,8 @@ const AuthInput: React.FC<AuthInputProps> = ({
           'text-white',
           'outline-none',
           'transition-all',
-          'duration-300'
+          'duration-300',
+          disabledClasses
         )}
       />
       {error && <p className="text-red-500 text-xs mt-1">{error}</p>}

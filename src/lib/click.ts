@@ -7,24 +7,21 @@ export interface DelayedClickOptions {
 
 /**
  * Wraps an async click handler with a random delay
- * Useful for UX throttling, not security
+ * Using 'unknown[]' ensures we don't cheat the type system with 'any'
  */
-export function withRandomDelay<T extends (...args: any[]) => Promise<any>>(
-  handler: T,
+export function withRandomDelay<Args extends unknown[], R>(
+  handler: (...args: Args) => Promise<R>,
   options: DelayedClickOptions = {}
-): (...args: Parameters<T>) => Promise<ReturnType<T>> {
-  const {
-    minDelayMs = 1000,
-    maxDelayMs = 5000,
-  } = options;
+): (...args: Args) => Promise<R> {
+  const { minDelayMs = 1000, maxDelayMs = 5000 } = options;
 
-  return async (...args: Parameters<T>) => {
+  return async (...args: Args): Promise<R> => {
     const delay =
-      Math.floor(
-        Math.random() * (maxDelayMs - minDelayMs + 1)
-      ) + minDelayMs;
+      Math.floor(Math.random() * (maxDelayMs - minDelayMs + 1)) + minDelayMs;
 
     await new Promise((res) => setTimeout(res, delay));
+
+    // By returning the handler directly, we fulfill Promise<R>
     return handler(...args);
   };
 }

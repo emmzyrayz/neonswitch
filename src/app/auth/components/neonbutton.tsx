@@ -5,6 +5,7 @@ interface NeonButtonProps {
   onClick?: () => void;
   className?: string;
   type?: "button" | "submit" | "reset";
+  disabled: boolean;
 }
 
 const NeonButton: React.FC<NeonButtonProps> = ({
@@ -12,11 +13,13 @@ const NeonButton: React.FC<NeonButtonProps> = ({
   onClick,
   className,
   type = "button",
+  disabled = false,
 }) => {
   return (
     <button
     type={type}
       onClick={onClick}
+      disabled={disabled}
       className={`bg-primary hover:bg-muted/70 text-soft/40 hover:text-soft ease-in-out px-6 py-2 rounded-md font-bold tracking-wide shadow-soft/30 hover:shadow-neonPinkGlow transition-all duration-700 ${className}`}
     >
       {children}

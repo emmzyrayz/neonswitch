@@ -1,4 +1,4 @@
-// app/api/auth/reset-password/route.ts - UPDATED VERSION
+// app/api/auth/reset-password/route.ts - IMPROVED VERSION
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
@@ -31,23 +31,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // Sanitize email using validator function
+    // Sanitize email
     const email = sanitizeEmail(rawEmail);
-    const ip = getClientIp(req);
 
-    // ========== 2. RATE LIMITING ==========
-    const rateLimitKey = `${ip}:${email}`;
-    const rateLimit = await applyRateLimit(
-      rateLimitKey,
-      resetPasswordRateLimit,
-      "Too many password reset attempts. Please try again later."
-    );
-
-    if (!rateLimit.blocked) {
-      return rateLimit.response;
-    }
-
-    // ========== 3. VALIDATE EMAIL & PASSWORD ==========
+    // ========== 2. VALIDATE EMAIL & PASSWORD ==========
     if (!isValidEmail(email)) {
       return NextResponse.json(
         { error: "Invalid email format" },
@@ -61,6 +48,20 @@ export async function POST(req: Request) {
         { error: passwordValidation.error },
         { status: 400 }
       );
+    }
+
+    const ip = getClientIp(req);
+
+    // ========== 3. RATE LIMITING ==========
+    const rateLimitKey = `${ip}:${email}`;
+    const rateLimit = await applyRateLimit(
+      rateLimitKey,
+      resetPasswordRateLimit,
+      "Too many password reset attempts. Please try again later."
+    );
+
+    if (!rateLimit.blocked) {
+      return rateLimit.response;
     }
 
     // ========== 4. CONNECT TO DATABASE ==========
@@ -81,6 +82,7 @@ export async function POST(req: Request) {
     );
 
     if (!user) {
+      // Generic error message to prevent enumeration
       return NextResponse.json(
         { error: "Invalid or expired reset credentials" },
         { status: 400 }
@@ -106,7 +108,7 @@ export async function POST(req: Request) {
 
     if (isSamePassword) {
       return NextResponse.json(
-        { error: "New password must be different from your old password" },
+        { error: "New password must be different from your current password" },
         { status: 400 }
       );
     }
@@ -119,13 +121,16 @@ export async function POST(req: Request) {
     user.resetPasswordToken = undefined;
     user.resetPasswordCode = undefined;
     user.resetPasswordExpiry = undefined;
+    // Increment tokenVersion to invalidate all existing JWTs
     user.tokenVersion = (user.tokenVersion || 0) + 1;
     await user.save();
+
+    console.log(`🔐 Password reset successful for user: ${user.email}`);
 
     // ========== 10. REVOKE ALL REFRESH TOKENS ==========
     // Force re-login on all devices for security
     try {
-      await RefreshToken.updateMany(
+      const result = await RefreshToken.updateMany(
         { userId: user._id, revokedAt: null },
         { 
           $set: { 
@@ -135,7 +140,8 @@ export async function POST(req: Request) {
           } 
         }
       );
-      console.log("✅ All refresh tokens revoked after password reset");
+      
+      console.log(`🔒 Revoked ${result.modifiedCount} active session(s) after password reset`);
     } catch (tokenError) {
       console.error("Failed to revoke refresh tokens:", tokenError);
       // Continue - password was reset successfully
@@ -143,17 +149,29 @@ export async function POST(req: Request) {
 
     // ========== 11. SEND PASSWORD CHANGED EMAIL ==========
     try {
-      await sendPasswordChangedEmail(user.email);
+      await sendPasswordChangedEmail(user.email, ip);
       console.log("✅ Password changed notification sent to:", user.email);
     } catch (mailError) {
       console.error("Failed to send password changed email:", mailError);
       // Continue - password was reset successfully
     }
 
-    // ========== 12. RETURN SUCCESS RESPONSE ==========
+    // ========== 12. LOG FOR DEVELOPMENT ==========
+    if (process.env.NODE_ENV === 'development') {
+      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      console.log("🔐 [DEV] Password Reset Completed");
+      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      console.log("👤 Email:", email);
+      console.log("📍 IP:", ip);
+      console.log("🔢 Token Version:", user.tokenVersion);
+      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    }
+
+    // ========== 13. RETURN SUCCESS RESPONSE ==========
     return NextResponse.json(
       {
-        message: "Password reset successfully. You can now log in with your new password.",
+        message: "Password reset successfully. Please log in with your new password.",
+        sessionInvalidated: true
       },
       { status: 200 }
     );

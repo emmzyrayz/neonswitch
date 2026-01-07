@@ -13,7 +13,8 @@ import {
 } from "@/lib/upstashLimiter";
 
 const REQUIRE_EMAIL_VERIFICATION = process.env.REQUIRE_EMAIL_VERIFICATION === 'true';
-// const MAX_SESSIONS = 1;
+const REQUIRE_PHONE_VERIFICATION = process.env.REQUIRE_PHONE_VERIFICATION === 'true';
+
 
 export async function POST(req: Request) {
   try {
@@ -83,14 +84,30 @@ export async function POST(req: Request) {
       );
     }
 
-    // ========== 5. CHECK EMAIL VERIFICATION ==========
+    // ========== 5. CHECK VERIFICATION STATUS ==========
+    // Check email verification
     if (REQUIRE_EMAIL_VERIFICATION && !user.isEmailVerified) {
       return NextResponse.json(
         { 
           error: "Please verify your email before logging in",
           requiresVerification: true,
+          verificationType: 'email',
           email: user.email,
           code: 'EMAIL_NOT_VERIFIED'
+        },
+        { status: 403 }
+      );
+    }
+
+    // Check phone verification
+    if (REQUIRE_PHONE_VERIFICATION && !user.isPhoneVerified) {
+      return NextResponse.json(
+        { 
+          error: "Please verify your phone number before logging in",
+          requiresVerification: true,
+          verificationType: 'phone',
+          phone: user.phone,
+          code: 'PHONE_NOT_VERIFIED'
         },
         { status: 403 }
       );
@@ -127,6 +144,9 @@ export async function POST(req: Request) {
     const tokenPayload = {
       userId: user._id.toString(),
       email: user.email,
+      neonId: user.neonId,
+      role: user.role,
+      tokenVersion: user.tokenVersion || 0,
     };
 
     const accessToken = generateAccessToken(tokenPayload);
@@ -150,43 +170,25 @@ export async function POST(req: Request) {
       // Continue with login even if refresh token storage fails
     }
 
-    // ========== 8. LIMIT ACTIVE SESSIONS ==========
-    // const MAX_SESSIONS = 1;
-    // try {
-    //   const activeTokens = await RefreshToken.countDocuments({
-    //     userId: user._id,
-    //     revokedAt: null,
-    //     expiresAt: { $gt: new Date() }
-    //   });
-
-    //   if (activeTokens > MAX_SESSIONS) {
-    //     // Revoke oldest tokens
-    //     const tokensToRevoke = await RefreshToken.find({
-    //       userId: user._id,
-    //       revokedAt: null,
-    //       expiresAt: { $gt: new Date() }
-    //     })
-    //     .sort({ createdAt: 1 })
-    //     .limit(activeTokens - MAX_SESSIONS);
-
-    //     for (const token of tokensToRevoke) {
-    //       await token.revoke(ip, 'max_sessions_exceeded');
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.error("Failed to cleanup old sessions:", error);
-    // }
-
     // ========== 9. PREPARE RESPONSE ==========
     const response = NextResponse.json({
       message: "Login successful",
       accessToken,
       user: {
-        id: user._id,
+        id: user._id.toString(),
         email: user.email,
+        phone: user.phone,
         role: user.role,
-        isEmailVerified: user.isEmailVerified,
         neonId: user.neonId,
+        isEmailVerified: user.isEmailVerified,
+        isPhoneVerified: user.isPhoneVerified,
+        kycTier: user.kycTier,
+        kycStatus: user.kycStatus,
+        profile: {
+          firstName: user.profile?.firstName,
+          lastName: user.profile?.lastName,
+          nationality: user.profile?.nationality,
+        }
       },
     }, { status: 200 });
 

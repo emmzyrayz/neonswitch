@@ -15,7 +15,7 @@ const EMAIL_CONFIG = {
 const transporter = nodemailer.createTransport(EMAIL_CONFIG);
 
 // Verify connection on startup (optional)
-transporter.verify((error, success) => {
+transporter.verify((error) => {
   if (error) {
     console.error("❌ SMTP connection failed:", error);
   } else {
@@ -278,10 +278,11 @@ export async function sendPasswordResetEmail(
 }
 
 // 3. Password Changed Confirmation
-export async function sendPasswordChangedEmail(email: string) {
+export async function sendPasswordChangedEmail(email: string, ipAddress?: string) {
   const content = `
     <h1>Password Changed Successfully ✅</h1>
     <p>Your password has been changed successfully.</p>
+    ${ipAddress ? `Request came from IP: ${ipAddress}` : ''}
     <p>If you made this change, you can safely ignore this email.</p>
     
     <div class="divider"></div>

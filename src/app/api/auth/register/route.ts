@@ -62,6 +62,22 @@ export async function POST(req: Request) {
       );
     }
 
+    // Validate required profile fields
+    if (!dateOfBirth || !nationality || !gender) {
+      return NextResponse.json(
+        { error: "Date of birth, nationality, and gender are required" },
+        { status: 400 }
+      );
+    }
+
+    // Validate gender
+    if (!["male", "female", "other"].includes(gender)) {
+      return NextResponse.json(
+        { error: "Gender must be male, female, or other" },
+        { status: 400 }
+      );
+    }
+
     // Sanitize email using validator function
     const email = sanitizeEmail(rawEmail);
     const ip = getClientIp(req);
@@ -97,9 +113,7 @@ export async function POST(req: Request) {
     // ========== 5. DETERMINE COUNTRY CODE FOR PHONE FORMATTING ==========
     let countryCodeForPhone = nationality?.toUpperCase();
 
-     // If nationality not provided, try to infer from phone number or default to Nigeria
     if (!countryCodeForPhone) {
-      // If phone starts with +, we can try to detect country, otherwise default to NG
       if (!rawPhone.startsWith("+")) {
         countryCodeForPhone = "NG"; // Default fallback
         console.warn(
@@ -119,16 +133,14 @@ export async function POST(req: Request) {
     const phone = phoneResult.formatted!; // E.164 format
 
     // If nationality was provided, validate it's a supported country
-    if (nationality) {
-      const callingCode = getCountryCallingCode(nationality);
-      if (!callingCode) {
-        return NextResponse.json(
-          {
-            error: `Unsupported country code: ${nationality}. Please provide a valid ISO 3166-1 alpha-2 country code (e.g., NG, US, GB).`,
-          },
-          { status: 400 }
-        );
-      }
+     const callingCode = getCountryCallingCode(nationality);
+    if (!callingCode) {
+      return NextResponse.json(
+        {
+          error: `Unsupported country code: ${nationality}. Please provide a valid ISO 3166-1 alpha-2 country code (e.g., NG, US, GB).`,
+        },
+        { status: 400 }
+      );
     }
 
     // ========== 4. CONNECT TO DATABASE ==========
@@ -179,7 +191,7 @@ export async function POST(req: Request) {
 
 
     // ========== 9. CREATE USER ==========
-    const userData: IUser = {
+    const userData: Partial<IUser> = {
       email,
       phone,
       passwordHash,
@@ -197,27 +209,13 @@ export async function POST(req: Request) {
       kycTier: 0,
       kycStatus: "pending",
       profile: {
-        firstName: undefined,
-        lastName: undefined,
         dateOfBirth: new Date(dateOfBirth),
-        nationality: nationality,
-        gender: gender
+        nationality: nationality.toUpperCase(),
+        gender: gender as 'male' | 'female' | 'other',
+        ...(firstName && { firstName }),
+        ...(lastName && { lastName }),
       },
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
-
-    // Add optional profile data if provided
-    if (firstName || lastName || dateOfBirth || nationality || gender) {
-      userData.profile = {};
-      if (firstName) userData.profile.firstName = firstName;
-      if (lastName) userData.profile.lastName = lastName;
-      if (dateOfBirth) userData.profile.dateOfBirth = new Date(dateOfBirth);
-      if (nationality) userData.profile.nationality = nationality.toUpperCase();
-      if (gender && ["male", "female", "other"].includes(gender)) {
-        userData.profile.gender = gender;
-      }
-    }
 
      // ========== 14. CREATE USER ==========
     const user = await User.create(userData);
@@ -233,7 +231,6 @@ export async function POST(req: Request) {
       console.log("✅ Verification email sent to:", email);
     } catch (emailError) {
       console.error("Failed to send verification email:", emailError);
-      // Don't fail registration if email fails - user can resend later
     }
 
     // ========== 17. SEND PHONE VERIFICATION SMS ==========

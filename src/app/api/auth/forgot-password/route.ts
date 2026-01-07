@@ -11,6 +11,8 @@ import {
   getClientIp,
 } from "@/lib/upstashLimiter";
 
+const RESET_TOKEN_EXPIRY_HOURS = 1;
+
 export async function POST(req: Request) {
   try {
     // ========== 1. PARSE & VALIDATE INPUT ==========
@@ -26,6 +28,15 @@ export async function POST(req: Request) {
 
     // Sanitize email using validator function
     const email = sanitizeEmail(rawEmail);
+
+    // ========== 2. VALIDATE EMAIL ==========
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: "Invalid email format" },
+        { status: 400 }
+      );
+    }
+
     const ip = getClientIp(req);
 
     // ========== 2. RATE LIMITING ==========
@@ -56,20 +67,34 @@ export async function POST(req: Request) {
       "+resetPasswordToken +resetPasswordCode"
     );
 
+     // Generic response message (security: don't reveal if user exists)
+    const genericResponse = NextResponse.json(
+      {
+        message: "If your email is registered, you will receive a password reset link.",
+      },
+      { status: 200 }
+    );
+
     if (!user) {
-      // Don't reveal if user exists or not for security
-      return NextResponse.json(
-        {
-          message: "If your email is registered, you will receive a password reset link.",
-        },
-        { status: 200 }
-      );
+      // Add constant-time delay to prevent user enumeration via timing
+      await new Promise(resolve => setTimeout(resolve, 100));
+      return genericResponse;
+    }
+
+    const REQUIRE_VERIFIED_EMAIL = process.env.REQUIRE_EMAIL_VERIFICATION === 'true';
+    
+    if (REQUIRE_VERIFIED_EMAIL && !user.isEmailVerified) {
+      // Still return generic message for security
+      console.warn(`Password reset attempted for unverified email: ${email}`);
+      return genericResponse;
     }
 
     // ========== 6. GENERATE RESET TOKEN & CODE ==========
     const resetPasswordToken = generateToken();
     const resetPasswordCode = generateVerificationCode(8);
-    const resetPasswordExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    const resetPasswordExpiry = new Date(
+      Date.now() + RESET_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000
+    );
 
     // ========== 7. UPDATE USER WITH RESET INFO ==========
     user.resetPasswordToken = resetPasswordToken;
@@ -87,23 +112,25 @@ export async function POST(req: Request) {
       console.log("✅ Password reset email sent to:", email);
     } catch (mailError) {
       console.error("Failed to send password reset email:", mailError);
-      // Continue - don't fail the request if email fails
     }
 
     // ========== 10. LOG FOR DEVELOPMENT ==========
-    if (process.env.NODE_ENV === 'development') {
-      console.log("📧 [DEV] Password Reset URL:", resetUrl);
-      console.log("🔢 [DEV] Reset Code:", resetPasswordCode);
-      console.log("🔑 [DEV] Reset Token:", resetPasswordToken);
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
+    if (isDevelopment) {
+      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      console.log("📧 [DEV] Password Reset Details");
+      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      console.log("👤 Email:", email);
+      console.log("🔗 Reset URL:", resetUrl);
+      console.log("🔑 Reset Token:", resetPasswordToken);
+      console.log("🔢 Reset Code:", resetPasswordCode);
+      console.log(`⏰ Expires in: ${RESET_TOKEN_EXPIRY_HOURS} hour(s)`);
+      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     }
 
-    // ========== 11. RETURN SUCCESS RESPONSE ==========
-    return NextResponse.json(
-      {
-        message: "If your email is registered, you will receive a password reset link.",
-      },
-      { status: 200 }
-    );
+    // ========== 12. RETURN SUCCESS RESPONSE ==========
+    return genericResponse;
 
   } catch (error) {
     console.error("FORGOT PASSWORD ERROR:", error);

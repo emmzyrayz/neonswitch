@@ -53,11 +53,6 @@ export const COUNTRY_PHONE_PATTERNS: Record<
   // Add more country-specific patterns as needed
 };
 
-/**
- * Get country calling code from country code
- * @param countryCode - ISO 3166-1 alpha-2 country code (e.g., "NG", "US", "GB")
- * @returns Calling code without + (e.g., "234", "1", "44")
- */
 export function getCountryCallingCode(countryCode: string): string | null {
   return getCallingCode(countryCode);
 }
@@ -224,11 +219,9 @@ export function formatPhoneAsYouType(
 
   let display = digits;
   if (pattern?.format && digits.length >= pattern.minLength) {
-    // Apply formatting based on pattern
     try {
       display = pattern.format(digits);
     } catch {
-      // If formatting fails, just show digits
     }
   }
 
