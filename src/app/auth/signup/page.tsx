@@ -432,7 +432,7 @@ export default function Register() {
               disabled={isLoading || isSubmitting}
             />
 
-            <NeonButton className="mt-4" disabled={isLoading || isSubmitting}>
+            <NeonButton type="submit" className="mt-4" disabled={isLoading || isSubmitting}>
               {isLoading || isSubmitting ? "Creating Account..." : "Register"}
             </NeonButton>
           </form>

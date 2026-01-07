@@ -168,7 +168,7 @@ export default function ForgotPassword() {
               required
             />
 
-            <NeonButton className="mt-4" disabled={isLoading || isSubmitting}>
+            <NeonButton type="submit" className="mt-4" disabled={isLoading || isSubmitting}>
               {isLoading || isSubmitting ? "Sending..." : "Send Reset Link"}
             </NeonButton>
           </form>

@@ -250,7 +250,7 @@ export default function Verify() {
               required
             />
 
-            <NeonButton className="mt-4" disabled={isLoading || isSubmitting}>
+            <NeonButton type="submit" className="mt-4" disabled={isLoading || isSubmitting}>
               {isLoading || isSubmitting ? "Verifying..." : "Verify"}
             </NeonButton>
           </form>

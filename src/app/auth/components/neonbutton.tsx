@@ -20,7 +20,7 @@ const NeonButton: React.FC<NeonButtonProps> = ({
     type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`bg-primary hover:bg-muted/70 text-soft/40 hover:text-soft ease-in-out px-6 py-2 rounded-md font-bold tracking-wide shadow-soft/30 hover:shadow-neonPinkGlow transition-all duration-700 ${className}`}
+      className={`bg-muted hover:bg-muted/50 md:bg-primary md:hover:bg-muted/70 text-soft/40 hover:text-soft ease-in-out px-6 py-2 rounded-md font-bold tracking-wide shadow-soft/30 hover:shadow-neonPinkGlow transition-all duration-700 ${className}`}
     >
       {children}
     </button>

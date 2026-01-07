@@ -306,7 +306,7 @@ export default function ResetPassword() {
               </ul>
             </div>
 
-            <NeonButton className="mt-4" disabled={isLoading || isSubmitting}>
+            <NeonButton type="submit" className="mt-4" disabled={isLoading || isSubmitting}>
               {isLoading || isSubmitting
                 ? "Resetting Password..."
                 : "Reset Password"}

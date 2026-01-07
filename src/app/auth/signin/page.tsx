@@ -232,7 +232,7 @@ export default function Login() {
               </label>
             </div>
 
-            <NeonButton className="mt-4" disabled={isLoading || isSubmitting}>
+            <NeonButton type="submit" className="mt-4" disabled={isLoading || isSubmitting}>
               {isLoading || isSubmitting ? "Signing In..." : "SignIn"}
             </NeonButton>
           </form>
