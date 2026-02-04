@@ -66,6 +66,9 @@ export interface IUser {
   lastVerificationSentAt?: Date;
   lastPhoneVerificationSentAt?: Date;
 
+  // ===== Finance =====
+  ledgerId: string;
+
   // ===== Meta =====
   neonId: string;
   tokenVersion?: number;
@@ -161,6 +164,13 @@ const UserSchema = new Schema<IUser, IUserModel>(
       sparse: true,
     },
 
+    ledgerId: {
+      type: String,
+      sparse: true, // Not all users have ledgers immediately
+      unique: true,
+      immutable: true, // Cannot change once set
+    },
+
     role: {
       type: String,
       enum: ["user", "admin"],
@@ -222,11 +232,9 @@ const UserSchema = new Schema<IUser, IUserModel>(
 );
 
 // ========== INDEXES ==========
-UserSchema.index({ email: 1 });
-UserSchema.index({ phone: 1 });
-UserSchema.index({ verifyToken: 1 });
-UserSchema.index({ resetPasswordToken: 1 });
-UserSchema.index({ neonId: 1 });
+// UserSchema.index({ verifyToken: 1 });
+// UserSchema.index({ resetPasswordToken: 1 });
+// UserSchema.index({ ledgerId: 1 });
 
 
 

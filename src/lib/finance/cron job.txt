@@ -1,0 +1,37 @@
+
+// ========== CRON JOB SETUP (Example) ==========
+
+/*
+// For production, use a cron library or Vercel Cron Jobs
+
+// Example: Using node-cron
+import cron from "node-cron";
+
+// Run reconciliation every 6 hours
+cron.schedule("0 */6 * * *", async () => {
+  console.log("🕐 [CRON] Running scheduled reconciliation...");
+  await ReconciliationService.runReconciliation("CRON");
+});
+
+// Example: Vercel Cron (vercel.json)
+{
+  "crons": [
+    {
+      "path": "/api/cron/reconciliation",
+      "schedule": "0 */6 * * *"
+    }
+  ]
+}
+
+// Then create /app/api/cron/reconciliation/route.ts:
+export async function GET(request: Request) {
+  // Verify request is from Vercel Cron
+  const authHeader = request.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  await ReconciliationService.runReconciliation("CRON");
+  return new Response("OK");
+}
+*/
