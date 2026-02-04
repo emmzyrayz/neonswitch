@@ -1,6 +1,9 @@
 // models/Withdrawal.ts
 
-import mongoose, { Schema, models, Model } from "mongoose";
+import mongoose, { Schema, models, Model, HydratedDocument } from "mongoose";
+
+
+// type WithdrawalDoc = IWithdrawal & mongoose.Document;
 
 export type WithdrawalStatus =
   | "PENDING"
@@ -87,6 +90,7 @@ const WithdrawalSchema = new Schema<IWithdrawal>(
     netAmount: {
       type: Number,
       required: true,
+      default: 0,
       validate: {
         validator: Number.isInteger,
         message: "Net amount must be an integer (kobo)",
@@ -156,16 +160,15 @@ const WithdrawalSchema = new Schema<IWithdrawal>(
 );
 
 // Indexes
-WithdrawalSchema.index({ userId: 1, status: 1 });
-WithdrawalSchema.index({ status: 1, createdAt: -1 });
-WithdrawalSchema.index({ ledgerId: 1 });
+// WithdrawalSchema.index({ userId: 1, status: 1 });
+// WithdrawalSchema.index({ status: 1, createdAt: -1 });
+// WithdrawalSchema.index({ ledgerId: 1 });
 
 // Calculate netAmount before saving
-WithdrawalSchema.pre("save", function (next) {
+WithdrawalSchema.pre("save", function (this: HydratedDocument<IWithdrawal>) {
   if (this.isNew || this.isModified("amount") || this.isModified("fee")) {
-    this.netAmount = this.amount - this.fee;
+    this.netAmount = Math.max(0, this.amount - this.fee);
   }
-  next();
 });
 
 const Withdrawal =
