@@ -5,7 +5,7 @@ import { connectDB } from "@/lib/db";
 import { financeConfig } from "@/lib/finance";
 import { LedgerService } from "@/lib/finance/ledger.service";
 import User from "@/models/User";
-import Withdrawal from "@/models/Withdrawal";
+import Withdrawal from "@/models/withdrawal";
 import { verify, JwtPayload } from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
